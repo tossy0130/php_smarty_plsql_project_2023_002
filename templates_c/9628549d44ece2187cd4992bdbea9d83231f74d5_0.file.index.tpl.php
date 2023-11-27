@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 4.3.2, created on 2023-11-01 16:25:06
+/* Smarty version 4.3.2, created on 2023-11-27 14:22:51
   from 'C:\xampp\htdocs\smarty_p_01\templates\index.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '4.3.2',
-  'unifunc' => 'content_6541fd5244f266_59196959',
+  'unifunc' => 'content_656427abd38712_40522805',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     '9628549d44ece2187cd4992bdbea9d83231f74d5' => 
     array (
       0 => 'C:\\xampp\\htdocs\\smarty_p_01\\templates\\index.tpl',
-      1 => 1698823500,
+      1 => 1701062570,
       2 => 'file',
     ),
   ),
@@ -20,7 +20,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   array (
   ),
 ),false)) {
-function content_6541fd5244f266_59196959 (Smarty_Internal_Template $_smarty_tpl) {
+function content_656427abd38712_40522805 (Smarty_Internal_Template $_smarty_tpl) {
 ?><!DOCTYPE html>
 <html>
 <head>
@@ -97,6 +97,8 @@ function content_6541fd5244f266_59196959 (Smarty_Internal_Template $_smarty_tpl)
 </head>
 <body>
     <h1>Smarty CURD APP</h1>
+
+    <p><a href="../public_html/view_pdf.php">PDF 一覧</a></p>
 	
     <table>
      <tr>

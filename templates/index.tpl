@@ -74,6 +74,8 @@
 </head>
 <body>
     <h1>Smarty CURD APP</h1>
+
+    <p><a href="../public_html/view_pdf.php">PDF 一覧</a></p>
 	
     <table>
      <tr>
