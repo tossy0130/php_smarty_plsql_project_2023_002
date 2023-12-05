@@ -1,0 +1,8 @@
+CREATE OR REPLACE PROCEDURE GET_KASOU_K (
+    P_SID IN VARCHAR2, --セッションID
+    p_KASOU_K OUT NUMBER,
+    p_KASOU_K_NAME
+    P_RSLT OUT NUMBER, --ステータス(0:正常終了　99:エラー)
+    P_SQLCODE OUT NUMBER, --エラーコード
+    P_SQLERRM OUT VARCHAR2 --エラーメッセージ
+)
