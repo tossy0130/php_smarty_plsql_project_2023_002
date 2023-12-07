@@ -2,7 +2,6 @@
 <html>
 <head>
     <title>日付表示</title>
-
 <body>
 
 
