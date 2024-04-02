@@ -1,11 +1,6 @@
 <?php
 /*
-* This file is part of SAIJYO WEB YOYAKU SYSTEM
-*
-* Copyright(c) Oriental CO.,LTD. All Rights Reserved.
-*
-* uri: http://oriental-soft.jp/
-* email: info@oriental-soft.jp
+
 */
 require_once './common.php';
 require_once CLASS_PATH . '/child/Ch_Reserve.php';
@@ -21,6 +16,11 @@ class Reserve_Edit extends Ch_Reserve
 	 *
 	 * @return void
 	 */
+
+	// === 追加
+	private $arrZiin_val;
+
+	private $arrSyukan_Place;
 
 	function init()
 	{
@@ -187,6 +187,13 @@ class Reserve_Edit extends Ch_Reserve
 				$this->GET_KASOU_KUBUN(); // === 火葬区分
 
 				$this->GET_SIBOU_TIME();
+
+				$this->GET_YOUSIKI();
+				$this->GET_ZIIN();
+				$this->GET_SYUKAN();
+				$this->GET_KOZIN_ZOKU();
+				$this->SIBOU_PLACE();
+				//	$this->GET_RENRAKU_ZIKOU();
 
 				$ret = $this->doRead($objFormParam);
 				break;
@@ -611,6 +618,7 @@ class Reserve_Edit extends Ch_Reserve
 	public function doReturn(&$objFormParam)
 	{
 		if ($this->getMode() == 'reserve_entry_r') {
+
 			$this->tpl_title = "新規登録";
 		} else if ($this->getMode() == 'reserve_edit_r') {
 			// edit時
@@ -670,23 +678,23 @@ class Reserve_Edit extends Ch_Reserve
 		$nrows = oci_fetch_all($stid, $Zint_row, null, null, OCI_FETCHSTATEMENT_BY_ROW);
 
 
-		$arrZiin_val = array();
+		$this->arrZiin_val = array();
 
 		$idx = 1;
 		foreach ($Zint_row as $ziin_val) {
-			//	$ziin_idx = $ziin_val['寺院コード'];
+
 			$ziin_idx = $ziin_val['寺院名称'];
-			$arrZiin_val[$ziin_idx] = $ziin_val['寺院名称'];
-			//	$arrZiin_val[$idx] = $ziin_val['寺院名称'];
-			//	$idx += 1;
+			$this->arrZiin_val[$ziin_idx] = $ziin_val['寺院名称'];
 		}
+
+		// print_r($this->arrZiin_val);
 
 
 		if (
 			$nrows > 0
 		) {
 			//Ut_Utils::printR($res);
-			$this->arrZiin_val_v = $arrZiin_val;
+			$this->arrZiin_val_v = $this->arrZiin_val;
 		}
 
 		oci_free_statement($stid);
@@ -756,21 +764,23 @@ class Reserve_Edit extends Ch_Reserve
 
 		$nrows = oci_fetch_all($stid, $Syukan_row, null, null, OCI_FETCHSTATEMENT_BY_ROW);
 
-		$arrSyukan_Place = array();
+		$this->arrSyukan_Place = array();
 
 		$idx = 1;
 		foreach ($Syukan_row as $Syukan_Place_val) {
 			//	$key_idx = $Syukan_Place_val['出棺場所コード'];
 			$key_idx = $Syukan_Place_val['出棺場所名'];
-			$arrSyukan_Place[$key_idx] = $Syukan_Place_val['出棺場所名'];
+			$this->arrSyukan_Place[$key_idx] = $Syukan_Place_val['出棺場所名'];
 			//	$idx += 1;
 		}
+
+		// print_r($this->arrSyukan_Place);
 
 		if (
 			$nrows > 0
 		) {
 			//Ut_Utils::printR($res);
-			$this->arrSyukan_Place_v = $arrSyukan_Place;
+			$this->arrSyukan_Place_v = $this->arrSyukan_Place;
 		}
 
 		oci_free_statement($stid);
@@ -884,6 +894,7 @@ class Reserve_Edit extends Ch_Reserve
 
 		$sibou_time_Flg = "";
 
+		$uke_nend = $this->session->getSession("UKE_NEND");
 
 		$waku_no  = $this->session->getSession("WAKU_NO");
 		$uke_no = $this->session->getSession("UKE_NO");
@@ -925,7 +936,6 @@ class Reserve_Edit extends Ch_Reserve
 
 		if (isset($r_get[0])) {
 
-
 			$GET_sibou_time = $r_get[0]['死亡時刻'];
 
 			//print($GET_sibou_time . "\n");
@@ -937,7 +947,27 @@ class Reserve_Edit extends Ch_Reserve
 			$first_part = "";
 			$second_part = "";
 
-			if ($length == 3) {
+			if ($length == 1) {
+
+				$second_part = substr($GET_sibou_time, 0, 1);
+				$sibou_time_Flg = 3;
+				$first_part = 0;
+
+				$this->sibou_time_Flg_v = $sibou_time_Flg;
+
+				$this->death_first_time = $first_part;
+				$this->death_second_time = $second_part;
+			} elseif ($length == 2) {
+
+				$second_part = substr($GET_sibou_time, 0, 2);
+				$sibou_time_Flg = 2;
+				$first_part = 0;
+
+				$this->sibou_time_Flg_v = $sibou_time_Flg;
+
+				$this->death_first_time = $first_part;
+				$this->death_second_time = $second_part;
+			} elseif ($length == 3) {
 				$first_part = substr($GET_sibou_time, 0, 1);
 				$second_part = substr($GET_sibou_time, -2, 2);
 
@@ -972,14 +1002,559 @@ class Reserve_Edit extends Ch_Reserve
 			$this->sibou_time_Flg_v = $sibou_time_Flg;
 		}
 
+		oci_free_statement($stid);
+		oci_close($conn);
+	}
 
 
 
+	function GET_YOUSIKI()
+	{
+
+		$Yousiki_Flg = "";
+
+		$uke_nend = $this->session->getSession("UKE_NEND");
+
+		$waku_no  = $this->session->getSession("WAKU_NO");
+		$uke_no = $this->session->getSession("UKE_NO");
+
+		// print($uke_no);
+
+		// OCI
+		$conn = oci_connect(DB_USER, DB_PASSWORD, DB_CONNECTION_STRING, DB_CHARSET);
+
+		if (!$conn) {
+			$e = oci_error();
+			self::fnDispError(DB_ERROR, $e['message'], true, DEBUG_MODE);
+		}
+
+		//	$sql = "SELECT 死亡時刻 FROM 火葬受付 WHERE 受付番号 = :uke_no";
+		$sql = "SELECT 葬儀形態区分 FROM 火葬受付 WHERE 受付年度 = :uke_nend AND 受付番号 = :uke_no AND 葬儀形態区分 IS NOT NULL";
+
+		$stid = oci_parse($conn, $sql);
+		if (!$stid) {
+			$e = oci_error($conn);
+			self::fnDispError(DB_ERROR, $e['message'], true, DEBUG_MODE);
+		}
+
+		oci_bind_by_name($stid, ":uke_no", $uke_no);
+		oci_bind_by_name($stid, ":uke_nend", $uke_nend);
+
+		$r = oci_execute($stid);
+		if (!$r) {
+			$e = oci_error($stid);
+			self::fnDispError(DB_ERROR, $e['message'], true, DEBUG_MODE);
+		}
+
+		$nrows = oci_fetch_all($stid, $yousiki_get, null, null, OCI_FETCHSTATEMENT_BY_ROW);
+
+		if ($nrows > 0) {
+			//Ut_Utils::printR($res);
+			// Ut_Utils::printR($nrows);
+			$ret = true;
+		}
+
+		if (isset($yousiki_get[0])) {
+
+			$GET_yousiki = $yousiki_get[0]['葬儀形態区分'];
+
+			// print($GET_yousiki . "\n");
+
+			$Yousiki_Flg = 1;
+
+
+			$this->Yousiki_Flg_v = $Yousiki_Flg;
+
+			$this->GET_yousiki_v = $GET_yousiki;
+		} else {
+
+			$Yousiki_Flg = "";
+			$this->Yousiki_Flg_v = $Yousiki_Flg;
+		}
 
 		oci_free_statement($stid);
 		oci_close($conn);
 	}
+
+
+	function GET_ZIIN()
+	{
+
+		$Ziin_Flg = "";
+		$Ziin_Flg_Text = "";
+
+		$uke_nend = $this->session->getSession("UKE_NEND");
+
+		$waku_no  = $this->session->getSession("WAKU_NO");
+		$uke_no = $this->session->getSession("UKE_NO");
+
+		// print($uke_no);
+
+		// OCI
+		$conn = oci_connect(DB_USER, DB_PASSWORD, DB_CONNECTION_STRING, DB_CHARSET);
+
+		if (!$conn) {
+			$e = oci_error();
+			self::fnDispError(DB_ERROR, $e['message'], true, DEBUG_MODE);
+		}
+
+		//	$sql = "SELECT 死亡時刻 FROM 火葬受付 WHERE 受付番号 = :uke_no";
+		$sql = "SELECT 寺院名称 FROM 火葬受付 WHERE 受付年度 = :uke_nend AND 受付番号 = :uke_no AND 寺院名称 IS NOT NULL";
+
+		$stid = oci_parse($conn, $sql);
+		if (!$stid) {
+			$e = oci_error($conn);
+			self::fnDispError(DB_ERROR, $e['message'], true, DEBUG_MODE);
+		}
+
+		oci_bind_by_name($stid, ":uke_no", $uke_no);
+		oci_bind_by_name($stid, ":uke_nend", $uke_nend);
+
+		$r = oci_execute($stid);
+		if (!$r) {
+			$e = oci_error($stid);
+			self::fnDispError(DB_ERROR, $e['message'], true, DEBUG_MODE);
+		}
+
+		$nrows = oci_fetch_all($stid, $ziin_get, null, null, OCI_FETCHSTATEMENT_BY_ROW);
+
+		if ($nrows > 0) {
+			//Ut_Utils::printR($res);
+			// Ut_Utils::printR($nrows);
+			$ret = true;
+		}
+
+		if (isset($ziin_get[0])) {
+
+			$GET_ziin = $ziin_get[0]['寺院名称'];
+
+			if (in_array($GET_ziin, $this->arrZiin_val)) {
+
+				$Ziin_Flg_Text = "";
+				$Ziin_Flg = 1;
+
+				$this->Ziin_Flg_Text_v = $Ziin_Flg_Text;
+				$this->Ziin_Flg_v = $Ziin_Flg;
+				$this->GET_ziin_v = $GET_ziin;
+			} else {
+
+				$Ziin_Flg = "";
+				$Ziin_Flg_Text = 1;
+
+				$this->Ziin_Flg_Text_v = $Ziin_Flg_Text;
+				$this->Ziin_Flg_v = $Ziin_Flg;
+				$this->GET_ziin_v = $GET_ziin;
+			}
+		} else {
+
+			$Ziin_Flg = "";
+			$this->Ziin_Flg_v = $Ziin_Flg;
+		}
+
+		oci_free_statement($stid);
+		oci_close($conn);
+	}
+
+
+	function GET_SYUKAN()
+	{
+
+		$Syukann_Flg = "";
+		$Syukann_Flg_Text = "";
+
+		$uke_nend = $this->session->getSession("UKE_NEND");
+
+		$waku_no  = $this->session->getSession("WAKU_NO");
+		$uke_no = $this->session->getSession("UKE_NO");
+
+		// print($uke_no);
+
+		// OCI
+		$conn = oci_connect(DB_USER, DB_PASSWORD, DB_CONNECTION_STRING, DB_CHARSET);
+
+		if (!$conn) {
+			$e = oci_error();
+			self::fnDispError(DB_ERROR, $e['message'], true, DEBUG_MODE);
+		}
+
+		//	$sql = "SELECT 死亡時刻 FROM 火葬受付 WHERE 受付番号 = :uke_no";
+		$sql = "SELECT 出棺場所名 FROM 火葬受付 WHERE 受付年度 = :uke_nend AND 受付番号 = :uke_no AND 出棺場所名 IS NOT NULL";
+
+		$stid = oci_parse($conn, $sql);
+		if (!$stid) {
+			$e = oci_error($conn);
+			self::fnDispError(DB_ERROR, $e['message'], true, DEBUG_MODE);
+		}
+
+		oci_bind_by_name($stid, ":uke_no", $uke_no);
+		oci_bind_by_name($stid, ":uke_nend", $uke_nend);
+
+		$r = oci_execute($stid);
+		if (!$r) {
+			$e = oci_error($stid);
+			self::fnDispError(DB_ERROR, $e['message'], true, DEBUG_MODE);
+		}
+
+		$nrows = oci_fetch_all($stid, $syukann_get, null, null, OCI_FETCHSTATEMENT_BY_ROW);
+
+		if ($nrows > 0) {
+			//Ut_Utils::printR($res);
+			// Ut_Utils::printR($nrows);
+			$ret = true;
+		}
+
+		if (isset($syukann_get[0])) {
+
+			if (!empty($syukann_get[0])) {
+
+				$GET_syukann = $syukann_get[0]['出棺場所名'];
+
+				//	print($GET_syukann);
+				if (in_array($GET_syukann, $this->arrSyukan_Place)) {
+
+					$Syukann_Flg = 1;
+					$Syukann_Flg_Text = "";
+
+					$this->Syukann_Flg_Text_v = $Syukann_Flg_Text;
+					$this->Syukann_Flg_v = $Syukann_Flg;
+					$this->GET_syukann_v = $GET_syukann;
+				} else {
+
+					$Syukann_Flg = "";
+					$Syukann_Flg_Text = 1;
+
+					$this->Syukann_Flg_Text_v = $Syukann_Flg_Text;
+					$this->Syukann_Flg_v = $Syukann_Flg;
+					$this->GET_syukann_v = $GET_syukann;
+				}
+			}
+		} else {
+
+			$Syukann_Flg = "";
+			$this->Syukann_Flg_v = $Syukann_Flg;
+		}
+
+		oci_free_statement($stid);
+		oci_close($conn);
+	}
+
+
+	/**
+	 *   
+	 */
+	function GET_KOZIN_ZOKU()
+	{
+
+		$KOZIN_ZOKU_Flg = "";
+		$KOZIN_ZOKU_Flg_Text = "";
+
+		$uke_nend = $this->session->getSession("UKE_NEND");
+
+		$waku_no  = $this->session->getSession("WAKU_NO");
+		$uke_no = $this->session->getSession("UKE_NO");
+
+		// print($uke_no);
+
+		// OCI
+		$conn = oci_connect(DB_USER, DB_PASSWORD, DB_CONNECTION_STRING, DB_CHARSET);
+
+		if (!$conn) {
+			$e = oci_error();
+			self::fnDispError(DB_ERROR, $e['message'], true, DEBUG_MODE);
+		}
+
+		//	$sql = "SELECT 死亡時刻 FROM 火葬受付 WHERE 受付番号 = :uke_no";
+		$sql = "SELECT 申請者続柄 FROM 火葬受付 WHERE 受付年度 = :uke_nend AND 受付番号 = :uke_no AND 申請者続柄 IS NOT NULL";
+
+		$stid = oci_parse($conn, $sql);
+		if (!$stid) {
+			$e = oci_error($conn);
+			self::fnDispError(DB_ERROR, $e['message'], true, DEBUG_MODE);
+		}
+
+		oci_bind_by_name($stid, ":uke_no", $uke_no);
+		oci_bind_by_name($stid, ":uke_nend", $uke_nend);
+
+		$r = oci_execute($stid);
+		if (!$r) {
+			$e = oci_error($stid);
+			self::fnDispError(DB_ERROR, $e['message'], true, DEBUG_MODE);
+		}
+
+		$nrows = oci_fetch_all($stid, $kozin_zoku_get, null, null, OCI_FETCHSTATEMENT_BY_ROW);
+
+		if ($nrows > 0) {
+			//Ut_Utils::printR($res);
+			// Ut_Utils::printR($nrows);
+			$ret = true;
+		}
+
+		if (isset($kozin_zoku_get[0])) {
+
+			if (!empty($kozin_zoku_get[0])) {
+
+				$GET_kozin_zoku_get = $kozin_zoku_get[0]['申請者続柄'];
+
+				if ($GET_kozin_zoku_get === '親族') {
+					// echo "0（親族）";
+					// print($GET_kozin_zoku_get);
+
+					$KOZIN_ZOKU_Flg = "";
+					$KOZIN_ZOKU_Flg_Text = "";
+
+					$this->KOZIN_ZOKU_Flg_Text_v = $KOZIN_ZOKU_Flg_Text;
+					$this->KOZIN_ZOKU_Flg_v = $KOZIN_ZOKU_Flg;
+					$this->GET_kozin_zoku_v = $GET_kozin_zoku_get;
+				} else {
+					// echo "1（その他）";
+					// print($GET_kozin_zoku_get);
+
+					$KOZIN_ZOKU_Flg = 1;
+					$KOZIN_ZOKU_Flg_Text = 1;
+
+					$this->KOZIN_ZOKU_Flg_Text_v = $KOZIN_ZOKU_Flg_Text;
+					$this->KOZIN_ZOKU_Flg_v = $KOZIN_ZOKU_Flg;
+					$this->GET_kozin_zoku_v = $GET_kozin_zoku_get;
+				}
+			} else {
+
+				$KOZIN_ZOKU_Flg = "";
+				$this->KOZIN_ZOKU_Flg_v = $KOZIN_ZOKU_Flg;
+			}
+
+			oci_free_statement($stid);
+			oci_close($conn);
+		}
+	}
+
+
+
+	/**
+	 *   　死亡場所　セット
+	 */
+	function SIBOU_PLACE()
+	{
+
+		$SIBOU_PLACE_Flg = "";
+
+		$uke_nend = $this->session->getSession("UKE_NEND");
+		$waku_no  = $this->session->getSession("WAKU_NO");
+		$uke_no = $this->session->getSession("UKE_NO");
+
+		// OCI
+		$conn = oci_connect(DB_USER, DB_PASSWORD, DB_CONNECTION_STRING, DB_CHARSET);
+
+		if (!$conn) {
+			$e = oci_error();
+			self::fnDispError(DB_ERROR, $e['message'], true, DEBUG_MODE);
+		}
+
+		//	$sql = "SELECT 申請者続柄 FROM 火葬受付 WHERE 受付年度 = :uke_nend AND 受付番号 = :uke_no AND 申請者続柄 IS NOT NULL";
+		$sql = "SELECT 死亡場所 FROM 火葬受付 WHERE 受付年度 = :uke_nend AND 受付番号 = :uke_no AND 死亡場所 IS NOT NULL";
+
+		$stid = oci_parse($conn, $sql);
+		if (!$stid) {
+			$e = oci_error($conn);
+			self::fnDispError(DB_ERROR, $e['message'], true, DEBUG_MODE);
+		}
+
+		oci_bind_by_name($stid, ":uke_no", $uke_no);
+		oci_bind_by_name($stid, ":uke_nend", $uke_nend);
+
+		$r = oci_execute($stid);
+		if (!$r) {
+			$e = oci_error($stid);
+			self::fnDispError(DB_ERROR, $e['message'], true, DEBUG_MODE);
+		}
+
+		$nrows = oci_fetch_all($stid, $sibou_place_get, null, null, OCI_FETCHSTATEMENT_BY_ROW);
+
+		if ($nrows > 0) {
+			//Ut_Utils::printR($res);
+			// Ut_Utils::printR($nrows);
+			$ret = true;
+		}
+
+		if (isset($sibou_place_get[0])) {
+
+			if (!empty($sibou_place_get[0])) {
+				// === テキストボックスが入力ありのとき
+				$SIBOU_PLACE_Flg = 1;
+				$GET_sibou_place_get = $sibou_place_get[0]['死亡場所'];
+
+				// print($GET_sibou_place_get);
+
+				$this->SIBOU_PLACE_Flg_v = $SIBOU_PLACE_Flg;
+				$this->GET_sibou_place_get_v = $GET_sibou_place_get;
+			}
+		} else {
+			// === テキストボックスが空欄時の処理
+			$SIBOU_PLACE_Flg = "";
+			$GET_sibou_place_get = "";
+
+			$this->SIBOU_PLACE_Flg_v = $SIBOU_PLACE_Flg;
+			$this->GET_sibou_place_get_v = $GET_sibou_place_get;
+		}
+
+		oci_free_statement($stid);
+		oci_close($conn);
+	}
+
+
+	/*
+	DB項目なし　「連絡事項」へ挿入する値の処理の、「修正」時の対応
+	*/
+	function GET_RENRAKU_ZIKOU()
+	{
+
+		$Ren_ZIKOU_Flg = "";
+		$Ren_ZIKOU_Flg_Text = "";
+
+		$uke_nend = $this->session->getSession("UKE_NEND");
+
+		$waku_no  = $this->session->getSession("WAKU_NO");
+		$uke_no = $this->session->getSession("UKE_NO");
+
+		// print($uke_no);
+
+		// OCI
+		$conn = oci_connect(DB_USER, DB_PASSWORD, DB_CONNECTION_STRING, DB_CHARSET);
+
+		if (!$conn) {
+			$e = oci_error();
+			self::fnDispError(DB_ERROR, $e['message'], true, DEBUG_MODE);
+		}
+
+		//	$sql = "SELECT 死亡時刻 FROM 火葬受付 WHERE 受付番号 = :uke_no";
+		$sql = "SELECT 連絡事項 FROM 火葬受付 WHERE 受付年度 = :uke_nend AND 受付番号 = :uke_no AND 連絡事項 IS NOT NULL";
+
+		$stid = oci_parse($conn, $sql);
+		if (!$stid) {
+			$e = oci_error($conn);
+			self::fnDispError(DB_ERROR, $e['message'], true, DEBUG_MODE);
+		}
+
+		oci_bind_by_name($stid, ":uke_no", $uke_no);
+		oci_bind_by_name($stid, ":uke_nend", $uke_nend);
+
+		$r = oci_execute($stid);
+		if (!$r) {
+			$e = oci_error($stid);
+			self::fnDispError(DB_ERROR, $e['message'], true, DEBUG_MODE);
+		}
+
+		$nrows = oci_fetch_all($stid, $Renraku_Val_get, null, null, OCI_FETCHSTATEMENT_BY_ROW);
+
+		// var_dump($Renraku_Val_get);
+		// print_r($Renraku_Val_get);
+
+		if ($nrows > 0) {
+			//Ut_Utils::printR($res);
+			// Ut_Utils::printR($nrows);
+			$ret = true;
+		}
+
+
+		if (isset($Renraku_Val_get[0])) {
+
+			if (!empty($Renraku_Val_get[0])) {
+
+				$GET_Renraku_Val = $Renraku_Val_get[0]['連絡事項'];
+				//	print($GET_Renraku_Val);
+
+				// === 値を分割 1
+				$GET_arr = explode("\n", $GET_Renraku_Val);
+
+				$Ren_Mosyu = "";		// 喪主:
+				$Ren_Weight = "";		// 体重:
+				$Ren_Reian = "";		// 霊安室利用:
+				$Ren_Kouro = "";		// 香炉:
+				$Ren_room = "";			// 部屋の大きさ
+				$Ren_Machiai_roby = ""; // ロビー待合せ:
+				$Ren_Machiai_riyou = "";	//利用者:
+				$Ren_Youshiki = "";	//様式:
+
+				$Patterns = array(
+					"喪主:",
+					"体重:",
+					"霊安室利用:",
+					"香炉:",
+					"部屋の大きさ:",
+					"ロビー待合せ:",
+					"利用者:",
+					"様式:",
+				);
+
+				foreach ($GET_arr as $Ren_Val) {
+
+					if (strpos($Ren_Val, $Patterns[0]) !== false) {
+						$Ren_Mosyu = $Ren_Val;
+						//	print("【喪主】" . $Ren_Mosyu);
+					}
+
+					if (strpos($Ren_Val, $Patterns[1]) !== false) {
+						$Ren_Weight = $Ren_Val;
+						//	print("【体重】" . $Ren_Weight);
+					}
+
+					if (strpos($Ren_Val, $Patterns[2]) !== false) {
+						$Ren_Reian = $Ren_Val;
+						print("【霊安室利用】" . $Ren_Reian);
+					}
+
+					if (strpos($Ren_Val, $Patterns[3]) !== false) {
+						$Ren_Kouro = $Ren_Val;
+						print("【香炉】" . $Ren_Kouro);
+					}
+
+					if (strpos($Ren_Val, $Patterns[4]) !== false) {
+						$Ren_room = $Ren_Val;
+						print("【部屋の大きさ】" . $Ren_room);
+					}
+
+					if (strpos($Ren_Val, $Patterns[5]) !== false) {
+						$Ren_Machiai_roby = $Ren_Val;
+						print("【ロビー待合せ】" . $Ren_Machiai_roby);
+					}
+
+					if (strpos($Ren_Val, $Patterns[6]) !== false) {
+						$Ren_Machiai_riyou = $Ren_Val;
+						print("【利用者】" . $Ren_Machiai_riyou);
+					}
+
+					if (strpos($Ren_Val, $Patterns[7]) !== false) {
+						$Ren_Youshiki = $Ren_Val;
+						print("【様式】" . $Ren_Youshiki);
+					}
+				}
+			} else {
+
+				// === 連絡事項が　空の時の処理
+				$Ren_ZIKOU_Flg = "";
+				print("値なし（連絡事項）");
+			}
+
+			oci_free_statement($stid);
+			oci_close($conn);
+		}
+	}
+
+	/**
+	 *  パターンマッチ（連絡事項）　用  前橋用　夏目 
+	 */
+	public function RenVal_CUT($Pattern, $val)
+	{
+
+		if (preg_match($Pattern, $val)) {
+			$val = $Pattern;
+			return $val;
+		} else {
+			$val = "";
+			return $val;
+		}
+	}
 }
+
 
 
 $objPage = new Reserve_Edit();

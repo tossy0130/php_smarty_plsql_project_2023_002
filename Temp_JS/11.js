@@ -128,3 +128,84 @@ document.getElementById("ren_tel_02").addEventListener("input", function() {
     this.value = this.value.slice(0, 4);
   }
 });
+
+
+// ========================死亡時刻　
+(function($){
+    $(document).ready(function(){
+
+        var time_of_death_free = $('#time_of_death_free');
+
+        time_of_death_free.prop('disabled', true);
+        $('#time_of_death_hour').prop('disabled', false);
+        $('#time_of_death_minutes').prop('disabled', false);
+
+        // === hidenn の要素の値が、空だったら、0000 をセットする
+        if ($('#time_of_death_time').val() === "") {
+            var hour_r = $('#time_of_death_hour').val();
+            var minute_r = $('#time_of_death_minutes').val();
+            var time_of_death_r = hour_r + minute_r;
+            $('#time_of_death_time').val(time_of_death_r);
+        }
+      
+
+        $('#time_of_death_hour, #time_of_death_minutes').blur(function() {
+       
+            var hour = $('#time_of_death_hour').val();
+            var minute = $('#time_of_death_minutes').val();
+      
+            var time_of_death = hour + minute;
+
+            console.log("hour:::" + hour);
+            console.log("minute:::" + minute);
+
+            // === 時刻不明　だった場合 => テキストボックスを使えるようにする。
+            if (hour === "時刻不明" || minute === "時刻不明") {
+                time_of_death_free.prop('disabled', false);
+                $('#time_of_death_hour').prop('disabled', true);
+                $('#time_of_death_minutes').prop('disabled', true);
+
+                hour = "";
+                minute = "";
+                time_of_death = "";
+
+                console.log("if 内 hour:::" + hour);
+                console.log("if 内 minute:::" + minute);
+
+                $('#time_of_death_time').val(time_of_death);
+
+            } else {
+                time_of_death_free.prop('disabled', true);
+                $('#time_of_death_hour').prop('disabled', false);
+                $('#time_of_death_minutes').prop('disabled', false);
+
+                $('#time_of_death_free').val("");
+
+                time_of_death = hour + minute;
+                $('#time_of_death_time').val(time_of_death);
+                console.log("死亡時刻:::" + time_of_death);
+            }
+
+            time_of_death = hour + minute;
+            $('#time_of_death_time').val(time_of_death);
+
+    });
+
+     $('#time_of_death_free').blur(function() {
+
+        var time_of_death_free_val = $('#time_of_death_free').val();
+        
+        if(time_of_death_free_val === "") {
+             time_of_death_free.prop('disabled', true);
+             $('#time_of_death_hour').prop('disabled', false);
+             $('#time_of_death_minutes').prop('disabled', false);
+        } 
+
+    });
+ 
+
+});
+
+})(jQuery);
+
+</script>

@@ -69,8 +69,9 @@
                 <col width="8%" />
                 <col width="5%" />
                 <col width="5%" />
-                <col width="9%" />
-                <col width="15%" />
+                <col width="6%" />
+                <col width="6%" />
+                <col width="13%" />
                 <col width="12%" />
 
                 <tr>
@@ -82,17 +83,33 @@
                     <th class="alignC">式場利用</th>
                     <th class="alignC">通夜式</th>
                     <th class="alignC">霊柩車</th>
-                    <th class="alignC">担当者</th>
-                    <th class="alignC">業者名</th>
+                    <th class="alignC">受付</th>
+                    <th class="alignC">窓口</th>
+                    <th class="alignC">業者</th>
                     <th class="alignC">埋火葬許可証</th>
                </tr>
                 
             <!--{section name=idx loop=$arr_idx}-->
+
+                <!--{if $arr_val_11[idx] !== 9}-->
                <tr>
                     <td><!--{$arr_idx_NUM[idx]}--></td>
                     <td><!--{$arr_val_01[idx]}--></td>
-                    <td><!--{$arr_val_02[idx]}--></td>
+
+                    <td>
+                     <!--{if $arr_val_12[idx] == 0}-->
+                        
+                        <!--{if $arr_val_14[idx] != ""}-->
+                            <!--{$arr_val_14[idx]}-->
+                        <!--{/if}-->
+
+                    <!--{else}-->
+                        <!--{$arr_val_02[idx]}-->
+                    <!--{/if}-->
+                    </td>
+
                     <td><!--{$arr_val_03[idx]}--></td>
+
                     <td>
                     <!--{if $arr_val_04[idx] == 0}-->
                         大人(12歳以上)
@@ -128,13 +145,50 @@
                      <!--{/if}-->
                      </td>
 
-                     <td><!--{$arr_val_09[idx]}--></td>
-                     <td><!--{$arr_val_10[idx]}--></td>
+                   
+                   
                      <td>
-                     <a href="<!--{$arr_val_11[idx]}-->" id="kyoka_syo_search" target="_blank" >表示</a>
+                     <!--{if $arr_val_11[idx] == 0}-->
+                        仮
+                     <!--{elseif $arr_val_11[idx] == 1}-->
+                        <span style="background:red;color:#fff;display: inline-block;padding: 1px;">確定</span>
+                    <!--{/if}-->
                      </td>
+
+                     <td>
+                     <!--{if $arr_val_12[idx] == 0}-->
+                        音声
+                     <!--{elseif $arr_val_12[idx] == 1}-->
+                        市民課
+                      <!--{elseif $arr_val_12[idx] == 2}-->
+                        斎場
+                      <!--{elseif $arr_val_12[idx] == 3}-->
+                        WEB予約
+                       <!--{elseif $arr_val_12[idx] == 4}-->
+                        スマホ予約
+                       <!--{/if}-->
+                     </td>
+
+                    <td><!--{$arr_val_10[idx]}--></td>
+
+                     <!--{if $arr_val_13[idx] == ""}-->
+                      <td>
+                        画像なし
+                      </td>
+                     <!--{else}-->
+                     <td>
+                     <a href="<!--{$arr_val_13[idx]}-->" id="kyoka_syo_search" target="_blank" >表示</a>
+                     </td>
+                    <!--{/if}-->
+
               </tr>
+
+               <!--{else}-->
+                <!--{/if}-->
+
             <!--{/section}-->
+
+           
 
             </table>
 

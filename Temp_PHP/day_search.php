@@ -226,11 +226,21 @@ class Day_search extends Base_Page
                 //   $sql = "SELECT 受付番号,申請者姓, 申請者名, 死亡者姓, 死亡者名, 火葬区分,予約日付,式場利用区分,通夜利用区分,霊きゅう車利用区分,受付担当者,業者名 FROM 火葬受付 WHERE 予約日付 = :selectedDate";
 
                 // SQL文
-                $sql = "SELECT Ka.受付番号, Ka.申請者姓, Ka.申請者名, Ka.死亡者姓, Ka.死亡者名, Ka.火葬区分, Ka.予約日付, Ka.式場利用区分, Ka.通夜利用区分, Ka.霊きゅう車利用区分, Ka.受付担当者, Ka.業者名, Pd.ファイルパス
-                FROM 火葬受付 Ka
-                INNER JOIN PDF_UPDETA Pd ON Ka.受付番号 = Pd.受付番号
-                WHERE Ka.予約日付 = :selectedDate
-                order by Ka.受付番号 ASC";
+
+                /*
+                $sql = "SELECT Ka.受付番号, Ka.申請者姓, Ka.申請者名, Ka.死亡者姓, Ka.死亡者名, Ka.火葬区分, Ka.予約日付, Ka.式場利用区分, Ka.通夜利用区分, Ka.霊きゅう車利用区分, Ka.受付担当者, Ka.業者名,Ka.受付区分, Ka.窓口区分, Pd.ファイルパス
+FROM 火葬受付 Ka
+LEFT JOIN PDF_UPDETA Pd ON Ka.受付番号 = Pd.受付番号 AND Ka.予約日付 = Pd.予約日付
+WHERE Ka.予約日付 = :selectedDate OR (Pd.受付番号 IS NULL AND Ka.予約日付 = :selectedDate) AND Ka.受付区分 in (0,1)
+ORDER BY Ka.受付番号 ASC";
+                */
+
+                $sql = "SELECT Ka.受付番号, Ka.申請者姓, Ka.申請者名, Ka.死亡者姓, Ka.死亡者名, Ka.火葬区分, Ka.予約日付, Ka.式場利用区分, Ka.通夜利用区分, Ka.霊きゅう車利用区分, Ka.受付担当者, Ka.業者名,Ka.受付区分, Ka.窓口区分, Pd.ファイルパス,Dt.申請者姓, Dt.申請者名, Dt.死亡者姓, Dt.死亡者名
+FROM 火葬受付 Ka
+LEFT JOIN PDF_UPDETA Pd ON Ka.受付番号 = Pd.受付番号 AND Ka.予約日付 = Pd.予約日付
+LEFT JOIN 火葬台帳 Dt ON Ka.受付番号 = Dt.受付番号 AND Ka.予約日付 = Dt.予約日付
+WHERE Ka.予約日付 = :selectedDate OR (Pd.受付番号 IS NULL AND Ka.予約日付 = :selectedDate) AND Ka.受付区分 in (0,1)
+ORDER BY Ka.受付番号 ASC";
 
                 $stid = oci_parse($conn, $sql);
                 if (!$stid) {
@@ -283,7 +293,15 @@ class Day_search extends Base_Page
                 $arr_val_09_tmp = array(); // 受付担当者
                 $arr_val_10_tmp = array(); // 業者名
 
-                $arr_val_11_tmp = array(); // ファイルパス
+                $arr_val_11_tmp = array(); // 受付区分
+
+                $arr_val_12_tmp = array(); // 窓口区分 
+                $arr_val_13_tmp = array(); // ファイルパス
+
+                $arr_val_14_tmp = array(); // 申請者姓
+                $arr_val_15_tmp = array(); // 申請者名
+                $arr_val_16_tmp = array(); // 死亡者姓
+                $arr_val_17_tmp = array(); // 死亡者名
 
 
                 $arr_idx_tmp = array();
@@ -315,7 +333,15 @@ class Day_search extends Base_Page
                     $arr_val_09_tmp[$idx] = $row['受付担当者'];
                     $arr_val_10_tmp[$idx] = $row['業者名'];
 
-                    $arr_val_11_tmp[$idx] = $row['ファイルパス'];
+                    $arr_val_11_tmp[$idx] = $row['受付区分'];
+                    $arr_val_12_tmp[$idx] = $row['窓口区分'];
+
+                    $arr_val_13_tmp[$idx] = $row['ファイルパス'];
+
+                    $arr_val_14_tmp[$idx] = $row['申請者姓'];
+                    $arr_val_15_tmp[$idx] = $row['申請者名'];
+                    $arr_val_16_tmp[$idx] = $row['死亡者姓'];
+                    $arr_val_17_tmp[$idx] = $row['死亡者名'];
 
                     $arr_idx_tmp[$idx] = $idx;
                     $arr_idx_NUM_tmp[$idx] = $idx + 1;
@@ -338,6 +364,13 @@ class Day_search extends Base_Page
                 $this->arr_val_10 = $arr_val_10_tmp;
 
                 $this->arr_val_11 = $arr_val_11_tmp;
+                $this->arr_val_12 = $arr_val_12_tmp;
+                $this->arr_val_13 = $arr_val_13_tmp;
+
+                $this->arr_val_14 = $arr_val_14_tmp;
+                $this->arr_val_15 = $arr_val_15_tmp;
+                $this->arr_val_16 = $arr_val_16_tmp;
+                $this->arr_val_17 = $arr_val_17_tmp;
 
                 // === 受付番号 件数の重複を削除して、当日の件数を表示用に加工
                 $uniqueArr_Uketuke = array_unique($arr_val_01_tmp);
@@ -345,12 +378,16 @@ class Day_search extends Base_Page
                 $this->Count_Uketuke_val = $Count_Uketuke;
 
                 oci_free_statement($stid);
+
+
                 oci_close($conn);
             } else {
                 echo "日付が選択されていません。";
             }
         }
     }
+
+
 
 
     /**
