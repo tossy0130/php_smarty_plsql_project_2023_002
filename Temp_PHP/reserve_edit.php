@@ -19,8 +19,15 @@ class Reserve_Edit extends Ch_Reserve
 
 	// === 追加
 	private $arrZiin_val;
-
 	private $arrSyukan_Place;
+
+	private $Ren_Mosyu_Flg = "";		// 喪主:
+	private $Ren_Weight_Flg = "";		// 体重:
+	private $Ren_Kouro_Flg = "";		// 香炉:
+	private $Ren_room_Flg = "";			// 部屋の大きさ
+	private $Ren_Machiai_roby_Flg = ""; // ロビー待合せ:
+	private $Ren_Machiai_riyou_Flg = "";	//利用者:
+	private $Ren_Youshiki_Flg = "";	//様式:
 
 	function init()
 	{
@@ -193,7 +200,8 @@ class Reserve_Edit extends Ch_Reserve
 				$this->GET_SYUKAN();
 				$this->GET_KOZIN_ZOKU();
 				$this->SIBOU_PLACE();
-				//	$this->GET_RENRAKU_ZIKOU();
+
+				$this->GET_RENRAKU_ZIKOU();
 
 				$ret = $this->doRead($objFormParam);
 				break;
@@ -446,6 +454,8 @@ class Reserve_Edit extends Ch_Reserve
 	{
 		$ret = false;
 
+
+
 		if ($this->getMode() == 'entry_confirm') {
 			$this->tpl_title = "新規登録";
 		} else if ($this->getMode() == 'edit_confirm') {
@@ -612,6 +622,22 @@ class Reserve_Edit extends Ch_Reserve
 	public function doDefault()
 	{
 		$this->tpl_title = "新規登録";
+
+		// === 追記 20240402
+		$this->Ren_Mosyu_Flg = 0;		// 喪主:
+		$this->Ren_Mosyu_Flg_v = $this->Ren_Mosyu_Flg;
+		// print("フラグ:::" . $this->Ren_Mosyu_Flg_v);
+
+		/*
+		$this->Ren_Weight_Flg = 0;		// 体重:
+		$this->Ren_Weight_Flg_v = $this->Ren_Weight_Flg;
+		*/
+
+		$this->Ren_Kouro_Flg = 0;		// 香炉:
+		$this->Ren_room_Flg = "";			// 部屋の大きさ
+		$this->Ren_Machiai_roby_Flg = ""; // ロビー待合せ:
+		$this->Ren_Machiai_riyou_Flg = "";	//利用者:
+		$this->Ren_Youshiki_Flg = "";	//様式:
 	}
 
 	//2014/12/16 ここから JIM 元川
@@ -1240,7 +1266,7 @@ class Reserve_Edit extends Ch_Reserve
 
 
 	/**
-	 *   
+	 *    故人との続柄　取得用
 	 */
 	function GET_KOZIN_ZOKU()
 	{
@@ -1402,6 +1428,7 @@ class Reserve_Edit extends Ch_Reserve
 
 
 	/*
+	20240402 追加 & 修正　夏目
 	DB項目なし　「連絡事項」へ挿入する値の処理の、「修正」時の対応
 	*/
 	function GET_RENRAKU_ZIKOU()
@@ -1411,7 +1438,6 @@ class Reserve_Edit extends Ch_Reserve
 		$Ren_ZIKOU_Flg_Text = "";
 
 		$uke_nend = $this->session->getSession("UKE_NEND");
-
 		$waku_no  = $this->session->getSession("WAKU_NO");
 		$uke_no = $this->session->getSession("UKE_NO");
 
@@ -1454,6 +1480,15 @@ class Reserve_Edit extends Ch_Reserve
 			$ret = true;
 		}
 
+		$Ren_Mosyu_F = 0;		// 喪主 フラグ:
+		$Ren_Weight_F = 0;		// 体重 フラグ:
+		$Ren_Reian_F = 0;		// 霊安室利用 フラグ:
+		$Ren_Kouro_F = 0;		// 香炉 フラグ:
+		$Ren_room_F = 0;			// 部屋の大きさ フラグ
+		$Ren_Machiai_roby_F = 0; // ロビー待合せ: フラグ
+		$Ren_Machiai_riyou_F = 0;	//利用者: フラグ
+		$Ren_Youshiki_F = 0;	//様式 フラグ
+
 
 		if (isset($Renraku_Val_get[0])) {
 
@@ -1474,10 +1509,10 @@ class Reserve_Edit extends Ch_Reserve
 				$Ren_Machiai_riyou = "";	//利用者:
 				$Ren_Youshiki = "";	//様式:
 
+				// === ※　文字列によって : （コロン）の半角、全角が違うので注意
 				$Patterns = array(
 					"喪主:",
 					"体重:",
-					"霊安室利用:",
 					"香炉:",
 					"部屋の大きさ:",
 					"ロビー待合せ:",
@@ -1487,55 +1522,193 @@ class Reserve_Edit extends Ch_Reserve
 
 				foreach ($GET_arr as $Ren_Val) {
 
+					// ========= 喪主
 					if (strpos($Ren_Val, $Patterns[0]) !== false) {
 						$Ren_Mosyu = $Ren_Val;
+						$Ren_Mosyu_F = 1;
+
+						$Ren_Mosyu = str_replace($Patterns[0], "", $Ren_Mosyu);
+
+						$this->Ren_Mosyu_Flg_v = $this->Ren_Mosyu_Flg;
+						$this->Ren_Mosyu_val = $Ren_Mosyu;
+
+						//	print("if フラグ:::" . $this->Ren_Mosyu_Flg_v);
 						//	print("【喪主】" . $Ren_Mosyu);
+					} else {
+						$this->Ren_Mosyu_Flg = "";
+						$this->Ren_Mosyu_Flg_v = $this->Ren_Mosyu_Flg;
 					}
 
+					// ========= 体重
 					if (strpos($Ren_Val, $Patterns[1]) !== false) {
 						$Ren_Weight = $Ren_Val;
-						//	print("【体重】" . $Ren_Weight);
+
+						$Ren_Weight = str_replace($Patterns[1], "", $Ren_Weight);
+
+						if (strpos($Ren_Weight, "100kg 以下") !== false) {
+							//	print("1:" . $Ren_Weight);
+							$Ren_Weight_F = 1;
+							//	print("pos1::" . $Ren_Weight_F);
+
+							$this->Ren_Weight_F_v = $Ren_Weight_F;
+							$this->Ren_Weight_val = $Ren_Weight;
+						} else if (strpos($Ren_Weight, "100kg 以上") !== false) {
+							//	print("2:" . $Ren_Weight);
+							$Ren_Weight_F = 2;
+							//	print("pos2::" . $Ren_Weight_F);
+
+							$this->Ren_Weight_F_v = $Ren_Weight_F;
+							$this->Ren_Weight_val = $Ren_Weight;
+						} else {
+							$Ren_Weight_F = 0;
+							$Ren_Weight = "";
+							//	print("pos3::" . $Ren_Weight_F);
+
+							$this->Ren_Weight_F_v = $Ren_Weight_F;
+							$this->Ren_Weight_val = $Ren_Weight;
+						}
+					} else {
+						$Ren_Weight_F = 0;
+						$this->Ren_Weight_Flg_v = $Ren_Weight_F;
 					}
 
+					// print("香炉前:::" . $Ren_Val);
+					// ========= 香炉
 					if (strpos($Ren_Val, $Patterns[2]) !== false) {
-						$Ren_Reian = $Ren_Val;
-						print("【霊安室利用】" . $Ren_Reian);
+
+						$Ren_Kouro = $Ren_Val;
+						$Ren_Kouro = str_replace($Patterns[2], "", $Ren_Kouro);
+
+						//	print($Ren_Kouro);
+
+						if (strpos($Ren_Kouro, "有り") !== false) {
+
+							$Ren_Kouro_F = 1;
+							$this->Ren_Kouro_F_v = $Ren_Kouro_F;
+							$this->Ren_Kouro_val = $Ren_Kouro;
+
+							//	print("【香炉】" . $Ren_Kouro);
+							//	print("【香炉01】" . $this->Ren_Kouro_F_v);
+						} else {
+							$Ren_Kouro_F = 0;
+							$this->Ren_Kouro_F_v = $Ren_Kouro_F;
+							$this->Ren_Kouro_val = $Ren_Kouro;
+
+							//	print("【香炉02】" . $this->Ren_Kouro_F_v);
+						}
 					}
 
 					if (strpos($Ren_Val, $Patterns[3]) !== false) {
-						$Ren_Kouro = $Ren_Val;
-						print("【香炉】" . $Ren_Kouro);
-					}
-
-					if (strpos($Ren_Val, $Patterns[4]) !== false) {
 						$Ren_room = $Ren_Val;
-						print("【部屋の大きさ】" . $Ren_room);
+
+						$Ren_room = str_replace($Patterns[3], "", $Ren_room);
+
+						// print($Ren_room);
+
+						if (strpos($Ren_room, "小部屋") !== false) {
+
+							$Ren_room_F = 1;
+							$this->Ren_room_F_v = $Ren_room_F;
+
+							//	print("小部屋:::" . $this->Ren_room_F_v);
+						} else if (strpos($Ren_room, "大部屋") !== false) {
+
+							$Ren_room_F = 2;
+							$this->Ren_room_F_v = $Ren_room_F;
+
+							//	print("大部屋:::" . $this->Ren_room_F_v);
+						} else if (strpos($Ren_room, "2室") !== false) {
+
+							$Ren_room_F = 3;
+							$this->Ren_room_F_v = $Ren_room_F;
+
+							//	print("2室:::" . $this->Ren_room_F_v);
+						}
+
+						//	print("【部屋の大きさ】" . $Ren_room);
 					}
 
-					if (strpos($Ren_Val, $Patterns[5]) !== false) {
+					// ========= ロビー待合せ
+					if (strpos($Ren_Val, $Patterns[4]) !== false) {
+
 						$Ren_Machiai_roby = $Ren_Val;
-						print("【ロビー待合せ】" . $Ren_Machiai_roby);
+						//	$Ren_Machiai_roby = str_replace($Patterns[4], "", $Ren_Machiai_roby);
+
+						preg_match('/\((\d+)\)/', $Ren_Machiai_roby, $matche_roby);
+
+						// 抜き取られた数字を変数に格納 （）の中の数字
+						if (isset($matche_roby[1])) {
+
+							$Ren_Machiai_roby_F = 1;
+							$this->Ren_Machiai_roby_F_v = $Ren_Machiai_roby_F;
+
+							$matche_roby_num = $matche_roby[1];
+							$this->matche_roby_num_val = $matche_roby_num;
+							//	echo "（）内の数字: " . $matche_roby_num;
+						}
 					}
 
-					if (strpos($Ren_Val, $Patterns[6]) !== false) {
+					// ========= 利用者
+					if (strpos($Ren_Val, $Patterns[5]) !== false) {
+
 						$Ren_Machiai_riyou = $Ren_Val;
-						print("【利用者】" . $Ren_Machiai_riyou);
+						preg_match('/\((\d+)\)/', $Ren_Machiai_riyou, $matche_riyou_room);
+
+						if (isset($matche_riyou_room[1])) {
+
+							$Ren_Machiai_riyou_F = 1;
+							$this->Ren_Machiai_riyou_F_v = $Ren_Machiai_riyou_F;
+
+							$Ren_Machiai_riyou = $matche_riyou_room[1];
+							$this->Ren_Machiai_riyou_val = $Ren_Machiai_riyou;
+							//	print($Ren_Machiai_riyou);
+						}
+						//	print("【利用者】" . $Ren_Machiai_riyou);
 					}
 
-					if (strpos($Ren_Val, $Patterns[7]) !== false) {
+					// ========= 様式
+					if (strpos($Ren_Val, $Patterns[6]) !== false) {
+
 						$Ren_Youshiki = $Ren_Val;
-						print("【様式】" . $Ren_Youshiki);
+						$Ren_Youshiki = str_replace($Patterns[6], "", $Ren_Youshiki);
+
+						$this->Ren_Youshiki_val = $Ren_Youshiki;
+						// print("【様式】" . $Ren_Youshiki);
 					}
 				}
 			} else {
 
 				// === 連絡事項が　空の時の処理
 				$Ren_ZIKOU_Flg = "";
-				print("値なし（連絡事項）");
+				// print("値なし（連絡事項）");
 			}
 
 			oci_free_statement($stid);
 			oci_close($conn);
+		} else {
+			// === 初期値の（新規登録 時）
+			$this->Ren_Mosyu_Flg = 0;
+			$this->Ren_Mosyu_Flg_v = $this->Ren_Mosyu_Flg;
+
+			// === 香炉
+			$Ren_Kouro_F = 0;
+			$this->Ren_Kouro_F_v = $Ren_Kouro_F;
+
+			// === 部屋の大きさ
+			$Ren_room_F = 0;
+			$this->Ren_room_F_v = $Ren_room_F;
+
+			// === ロビー待合せ
+			$Ren_Machiai_roby_F = 0;
+			$this->Ren_Machiai_roby_F_v = $Ren_Machiai_roby_F;
+
+			// === 利用者
+			$Ren_Machiai_riyou_F = 0;
+			$this->Ren_Machiai_riyou_F_v = $Ren_Machiai_riyou_F;
+
+			// === 様式
+			$Ren_Youshiki_F = 0;
+			$this->Ren_Youshiki_F_v = $Ren_Youshiki_F;
 		}
 	}
 

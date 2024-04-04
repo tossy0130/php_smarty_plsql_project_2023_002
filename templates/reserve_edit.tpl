@@ -98,7 +98,7 @@
                     </td>
                 </tr>
 
-                <tr>
+                  <tr>
                     <th class="alignL sp_title_01">通夜式利用</th>
                     <td class="alignL">
                         <!--{assign var=key1 value="tsuya_type"}-->
@@ -454,13 +454,14 @@
 
                  </tr>
 
+                <!--{assign var=key value="region_type"}-->
                 <tr>
                     <th class="alignL sp_title_01">死亡者の居住地</th>
                     <td class="alignL sp_content_01">
-                        <!--{assign var=key value="region_type"}-->
+                       
                         <span class="attention"><!--{$arrErr[$key]}--></span>
                         <span style="<!--{$arrErr[$key]|getErrorColor}-->">
-                            <!--{html_radios name="$key" options=$arrRegionType selected=$arrForm[$key]|default:0}-->
+                            <!--{html_radios name="$key" options=$arrRegionType selected=$arrForm[$key]}-->
                         </span>
                     </td>
                 </tr>
@@ -491,16 +492,19 @@
                     
                 </tr>
 
+                <!--{assign var=key value="region_type"}-->
                 <tr>
                     <th class="alignL sp_title_01">死亡者の居住地</th>
                     <td class="alignL">
-                        <!--{assign var=key value="region_type"}-->
+                        
                         <span class="attention"><!--{$arrErr[$key]}--></span>
                         <span style="<!--{$arrErr[$key]|getErrorColor}-->">
                             <!--{html_radios name="$key" options=$arrRegionType selected=$arrForm[$key]|default:0}-->
                         </span>
                     </td>
                 </tr>
+
+
                 <tr>
                     <th class="alignL sp_title_01">受付番号</th>
                     <td class="alignL">
@@ -538,10 +542,11 @@
 
                     </tr>
 
+                    <!--{assign var=key value="region_type"}-->
                     <tr>
                     <th class="alignL sp_title_01">死亡者の居住地</th>
                     <td class="alignL sp_content_01">
-                        <!--{assign var=key value="region_type"}-->
+                      
                         <span class="attention"><!--{$arrErr[$key]}--></span>
                         <span style="<!--{$arrErr[$key]|getErrorColor}-->">
                             <!--{html_radios name="$key" options=$arrRegionType selected=$arrForm[$key]|default:0}-->
@@ -588,10 +593,11 @@
                         </span>
                     </td>
 
+                    <!--{assign var=key value="region_type"}-->
                     <tr>
                         <th class="alignL sp_title_01">死亡者の居住地</th>
                         <td class="alignL sp_content_01">
-                            <!--{assign var=key value="region_type"}-->
+                            
                             <span class="attention"><!--{$arrErr[$key]}--></span>
                             <span style="<!--{$arrErr[$key]|getErrorColor}-->">
                                 <!--{html_radios name="$key" options=$arrRegionType selected=$arrForm[$key]|default:0}-->
@@ -599,6 +605,8 @@
                         </td>
                     </tr>
                   <tr>
+
+
                     <th class="alignL sp_title_01">受付番号</th>
                     <td class="alignL sp_content_01">
                         <!--{$uke_no}-->
@@ -623,10 +631,11 @@
                         </span>
                     </td>
 
+                <!--{assign var=key value="region_type"}-->
                 <tr>
                     <th class="alignL sp_title_01">死亡者の居住地</th>
                     <td class="alignL sp_content_01">
-                        <!--{assign var=key value="region_type"}-->
+                        
                         <span class="attention"><!--{$arrErr[$key]}--></span>
                         <span style="<!--{$arrErr[$key]|getErrorColor}-->">
                             <!--{html_radios name="$key" options=$arrRegionType selected=$arrForm[$key]|default:0}-->
@@ -670,10 +679,11 @@
 
                      </tr>
 
+                    <!--{assign var=key value="region_type"}-->
                     <tr>
                     <th class="alignL sp_title_01">死亡者の居住地</th>
                     <td class="alignL sp_content_01">
-                        <!--{assign var=key value="region_type"}-->
+                        
                         <span class="attention"><!--{$arrErr[$key]}--></span>
                         <span style="<!--{$arrErr[$key]|getErrorColor}-->">
                             <!--{html_radios name="$key" options=$arrRegionType selected=$arrForm[$key]|default:0}-->
@@ -762,21 +772,40 @@
                     </td>
                 </tr>
 
+                <!--{assign var=key value="applicant_rel"}-->
+                <!--{assign var=key_val value="親族"}-->
+                <!--{assign var=key_val_02 value="その他"}-->
                 <tr>
                     <th class="alignL sp_title_01">故人との続柄</th>
                     <td class="alignL">
 
                     <div class="sp_div_02">
-                        <!--{assign var=key value="applicant_rel"}-->
+
+                        <!--{if $KOZIN_ZOKU_Flg_Text_v == ""}-->
+                        <!--{assign var=applicant_rel_text_v value="applicant_rel_text"}-->
+                        
                         <span class="attention"><!--{$arrErr[$key]}--></span>
                         <span style="<!--{$arrErr[$key]|getErrorColor}-->">
-                            <!--{html_radios name="$key" options=$arrApplicantRel selected=$arrForm[$key]|default:0}-->
+                            <!--{html_radios name="$key" options=$arrApplicantRel_r selected=$arrForm[$key]|default:$key_val}-->
                         </span>
 
-                        <!--{assign var=applicant_rel_text_v value="applicant_rel_text"}-->
                         <span style="margin-left: 20px;">
-                             <input type="text" id="applicant_rel_text_v" name="<!--{$applicant_rel_text_v}-->" value="<!--{$arrForm[$applicant_rel_text_v]}-->" maxlength="30" size="20" class="box6" />
+                             <input type="text" id="applicant_rel_text_v" name="<!--{$applicant_rel_text_v}-->" value="" maxlength="30" size="20" class="box6" />
                         </span>
+                        
+                        <!--{else}-->
+                        
+                        <span class="attention"><!--{$arrErr[$key]}--></span>
+                        <span style="<!--{$arrErr[$key]|getErrorColor}-->">
+                            <!--{html_radios name="$key" options=$arrApplicantRel_r selected=$arrForm[$key]|default:$key_val_02}-->
+                        </span>
+
+                        <span style="margin-left: 20px;">
+                             <input type="text" id="applicant_rel_text_v" name="<!--{$applicant_rel_text_v}-->" value="<!--{$GET_kozin_zoku_v}-->" maxlength="30" size="20" class="box6" />
+                        </span>
+                        
+                        <!--{/if}-->
+
                     </div>
 
                     </td>
@@ -830,20 +859,32 @@
 
 <!-------------------------------------------------------{*  喪主 追加 　*}-------------------------------------------->
 
+                <!--{assign var=key1 value="mosyu_select"}-->
+                <!--{assign var=key2 value="mosyu_text"}-->
                 <tr>
                     <th class="alignL sp_title_01">喪主</th>
                     <td class="alignL">
-                        <!--{assign var=key1 value="mosyu_select"}-->
-                        <!--{assign var=key2 value="mosyu_text"}-->
+                    
+                    <!--{if $Ren_Mosyu_val == ""}-->
                         <span class="attention"><!--{$arrErr[$key1]}--><!--{$arrErr[$key2]}--></span>
-
-                         <span style="display:inline-block;">
+                        <span style="display:inline-block;">
                              <!--{html_radios name="$key1" id="mosyu_select" class="$key1" options=$arrMosyu_select selected=$arrForm[$key1]|default:0}-->
                         </span>
 
                         <span class="edit_box_001">
-                        喪主：<input type="text" id="mosyu_text" class="w_60" name="<!--{$key2}-->" value="<!--{$arrForm[$key2]}-->" maxlength="<!--{$smarty.const.STEXT_LEN}-->" style="<!--{$arrErr[$key2]|getErrorColor}-->;" class="box30" />
+                        喪主：<input type="text" id="mosyu_text" class="w_60" name="<!--{$key2}-->" value="" maxlength="<!--{$smarty.const.STEXT_LEN}-->" style="<!--{$arrErr[$key2]|getErrorColor}-->;" class="box30" />
                         </span>
+                    <!--{else}-->
+                        <span class="attention"><!--{$arrErr[$key1]}--><!--{$arrErr[$key2]}--></span>
+                        <span style="display:inline-block;">
+                             <!--{html_radios name="$key1" id="mosyu_select" class="$key1" options=$arrMosyu_select selected=$arrForm[$key1]|default:1}-->
+                        </span>
+
+                        <span class="edit_box_001">
+                        喪主：<input type="text" id="mosyu_text" class="w_60" name="<!--{$key2}-->" value="<!--{$Ren_Mosyu_val}-->" maxlength="<!--{$smarty.const.STEXT_LEN}-->" style="<!--{$arrErr[$key2]|getErrorColor}-->;" class="box30" />
+                        </span>
+
+                    <!--{/if}-->
 
                     </td>
                 </tr>
@@ -923,7 +964,7 @@
                         <!--{assign var=key value="applicant_rel"}-->
                         <span class="attention"><!--{$arrErr[$key]}--></span>
                         <span style="<!--{$arrErr[$key]|getErrorColor}-->">
-                            <!--{html_radios name="$key" options=$arrApplicantRel selected=$arrForm[$key]|default:0}-->
+                            <!--{html_radios name="$key" options=$arrApplicantRel_r selected=$arrForm[$key]|default:0}-->
                         </span>
 
                         <!--{assign var=applicant_rel_text_v value="applicant_rel_text"}-->
@@ -1051,9 +1092,9 @@
                         <!--{assign var=key value="applicant_rel"}-->
                         <span class="attention"><!--{$arrErr[$key]}--></span>
                         <span style="<!--{$arrErr[$key]|getErrorColor}-->">
-                            <!--{html_radios name="$key" options=$arrApplicantRel selected=$arrForm[$key]|default:0}-->
+                            <!--{html_radios name="$key" options=$arrApplicantRel_r selected=$arrForm[$key]|default:0}-->
                         </span>
-
+                        
                         <!--{assign var=applicant_rel_text_v value="applicant_rel_text"}-->
                         <span style="margin-left: 20px;">
                              <input type="text" class="input_01" id="applicant_rel_text_v" name="<!--{$applicant_rel_text_v}-->" value="<!--{$arrForm[$applicant_rel_text_v]}-->" maxlength="30" size="20" class="box6" />
@@ -1271,14 +1312,14 @@
                         </span>
                         <span class="death_time_free">
                              <!--{assign var=time_of_death_free_v value="time_of_death_free"}-->
-                             <input type="text" class="w_80" name="<!--{$time_of_death_free_v}-->" id="time_of_death_free" value="<!--{$arrForm[$time_of_death_free_v]}-->" maxlength="12" size="12" class="box6" />
+                             <input type="text" class="w_80" name="<!--{$time_of_death_free_v}-->" id="time_of_death_free" value="<!--{$arrForm[$time_of_death_free_v]}-->" maxlength="60" size="40" class="box6" />
 
                         </span>
                         </p>
 
-                        <!--{else}-->
+                        <!--{elseif $sibou_time_Flg_v == 1}-->
 
-                          <!--{assign var=death_time_H value="time_of_death_hour"}-->
+                        <!--{assign var=death_time_H value="time_of_death_hour"}-->
                         <!--{assign var=death_time_M value="time_of_death_minutes"}-->
 
                         <!--{assign var=time_of_death_time_V value="time_of_death_time"}-->
@@ -1318,7 +1359,103 @@
                         </span>
                         <span class="death_time_free">
                              <!--{assign var=time_of_death_free_v value="time_of_death_free"}-->
-                             <input type="text" class="w_80" name="<!--{$time_of_death_free_v}-->" id="time_of_death_free" value="<!--{$arrForm[$time_of_death_free_v]}-->" maxlength="12" size="12" class="box6" />
+                             <input type="text" class="w_80" name="<!--{$time_of_death_free_v}-->" id="time_of_death_free" value="<!--{$arrForm[$time_of_death_free_v]}-->" maxlength="60" size="40" class="box6" />
+
+                        </span>
+                        </p>
+
+                        <!--{elseif $sibou_time_Flg_v == 2}-->
+
+
+                        <!--{assign var=death_time_H value="time_of_death_hour"}-->
+                        <!--{assign var=death_time_M value="time_of_death_minutes"}-->
+
+                        <!--{assign var=time_of_death_time_V value="time_of_death_time"}-->
+
+                        <p style="margin: 10px 0;">
+                        <span>
+                        死亡時刻 
+                        </span>
+                         <!--{*  死亡時刻  時間　*}-->
+                        <span id="death_time_val_01">
+                        <select name="<!--{$death_time_H}-->" id="time_of_death_hour" style="<!--{$arrErr[$death_time_H]|getErrorColor}-->">
+                           
+                            <!--{assign var=death_time_H_V value=$death_first_time}-->
+                            <!--{html_options options=$arr_death_hour_TT selected=$death_time_H_V}-->
+                        </select>
+                             時
+                        </span>
+
+                          <!--{*  死亡時刻  分　*}-->
+                        <span id="death_time_val_02">
+                        <select name="<!--{$death_time_M}-->" id="time_of_death_minutes" style="<!--{$arrErr[$death_time_M]|getErrorColor}-->">
+                            
+                            <!--{assign var=death_time_M_V value=$death_second_time}-->
+                            <!--{html_options options=$arr_death_minute_TT selected=$death_time_M_V}-->
+                        </select>
+                             分
+                        </span>
+
+                        <input type="hidden" name="time_of_death_time" id="time_of_death_time" class="w_80" name="<!--{$time_of_death_time_V}-->" id="time_of_death_free" value="<!--{$GET_sibou_time_V}-->" maxlength="12" size="12" class="box6" />
+                        </p>
+
+                         <p class="form_info_M">※ 死亡時刻が不明の場合は、死亡時刻から「時刻不明」を選択し、下記の入力ボックスへ大枠の時刻を入力してください。</p>
+
+                        <p>
+                        <span id="death_time_free_ed">
+                        死亡時刻未定の入力
+                        </span>
+                        <span class="death_time_free">
+                             <!--{assign var=time_of_death_free_v value="time_of_death_free"}-->
+                             <input type="text" class="w_80" name="<!--{$time_of_death_free_v}-->" id="time_of_death_free" value="<!--{$arrForm[$time_of_death_free_v]}-->" maxlength="60" size="40" class="box6" />
+
+                        </span>
+                        </p>
+
+                        <!--{else}-->
+
+                        
+                        <!--{assign var=death_time_H value="time_of_death_hour"}-->
+                        <!--{assign var=death_time_M value="time_of_death_minutes"}-->
+
+                        <!--{assign var=time_of_death_time_V value="time_of_death_time"}-->
+
+                        <p style="margin: 10px 0;">
+                        <span>
+                        死亡時刻 
+                        </span>
+                         <!--{*  死亡時刻  時間　*}-->
+                        <span id="death_time_val_01">
+                        <select name="<!--{$death_time_H}-->" id="time_of_death_hour" style="<!--{$arrErr[$death_time_H]|getErrorColor}-->">
+                           
+                            <!--{assign var=death_time_H_V value=$death_first_time}-->
+                            <!--{html_options options=$arr_death_hour_TT selected=$death_time_H_V}-->
+                        </select>
+                             時
+                        </span>
+
+                          <!--{*  死亡時刻  分　*}-->
+                        <span id="death_time_val_02">
+                        <select name="<!--{$death_time_M}-->" id="time_of_death_minutes" style="<!--{$arrErr[$death_time_M]|getErrorColor}-->">
+                            
+                            <!--{assign var=death_time_M_V value=$death_second_time}-->
+                            <!--{html_options options=$arr_death_minute_TT selected=$death_time_M_V}-->
+                        </select>
+                             分
+                        </span>
+
+                        <input type="hidden" name="time_of_death_time" id="time_of_death_time" class="w_80" name="<!--{$time_of_death_time_V}-->" id="time_of_death_free" value="<!--{$GET_sibou_time_V}-->" maxlength="12" size="12" class="box6" />
+                        </p>
+
+                         <p class="form_info_M">※ 死亡時刻が不明の場合は、死亡時刻から「時刻不明」を選択し、下記の入力ボックスへ大枠の時刻を入力してください。</p>
+
+                        <p>
+                        <span id="death_time_free_ed">
+                        死亡時刻未定の入力
+                        </span>
+                        <span class="death_time_free">
+                             <!--{assign var=time_of_death_free_v value="time_of_death_free"}-->
+                             <input type="text" class="w_80" name="<!--{$time_of_death_free_v}-->" id="time_of_death_free" value="<!--{$arrForm[$time_of_death_free_v]}-->" maxlength="60" size="40" class="box6" />
 
                         </span>
                         </p>
@@ -1379,14 +1516,23 @@
 
                     </td>
                 </tr>
-
-                <!-- 死亡場所　追加 -->
+                
+                <!--{*  死亡場所　追加  *}-->
+                <!--{assign var=key1 value="death_place"}-->
                 <tr>
                     <th class="alignL sp_title_01">死亡場所</th>
                     <td class="alignL">
-                        <!--{assign var=key1 value="death_place"}-->
-                        <span class="attention"><!--{$arrErr[$key1]}--></span>
-                        <input type="text" class="w_80" name="<!--{$key1}-->" value="<!--{$arrForm[$key1]}-->" maxlength="<!--{$smarty.const.MTEXT_LEN}-->" style="<!--{$arrErr[$key1]|getErrorColor}-->;width:70%;"  />
+                       
+
+                        <!--{if $SIBOU_PLACE_Flg_v == 1}-->
+
+                            <span class="attention"><!--{$arrErr[$key1]}--></span>
+                            <input type="text" class="w_80" name="<!--{$key1}-->" value="<!--{$GET_sibou_place_get_v}-->" maxlength="<!--{$smarty.const.MTEXT_LEN}-->" style="<!--{$arrErr[$key1]|getErrorColor}-->;width:70%;"  />
+                        <!--{else}-->
+                            <span class="attention"><!--{$arrErr[$key1]}--></span>
+                            <input type="text" class="w_80" name="<!--{$key1}-->" value="" maxlength="<!--{$smarty.const.MTEXT_LEN}-->" style="<!--{$arrErr[$key1]|getErrorColor}-->;width:70%;"  />
+                        <!--{/if}-->
+
                     </td>
                 </tr>
                 <!-- 死亡場所　追加 END -->
@@ -1429,20 +1575,22 @@
                     </td>
                 </tr>
                 
+                <!--{assign var=cause_of_death_kb_v value="cause_of_death_kb"}-->
                 <tr>
                     <th class="alignL sp_title_01">死因</th>
                         <td class="alignL sp_content_01">
-                             <!--{assign var=cause_of_death_kb_v value="cause_of_death_kb"}-->
+                             
                              <span style="display:inline-block;">
                              <!--{html_radios name="$cause_of_death_kb_v" options=$arrDeath_Cause_KB selected=$arrForm[$cause_of_death_kb_v]|default:1}-->
                              </span>
                         </td>
                 </tr>
                 
+                 <!--{assign var=dead_pacemaker_v value="dead_pacemaker"}-->
                 <tr>
                     <th class="alignL sp_title_01">ペースメーカー使用</th>
                         <td class="alignL sp_content_01">
-                             <!--{assign var=dead_pacemaker_v value="dead_pacemaker"}-->
+                            
                              <span style="display:inline-block;">
                              <!--{html_radios name="$dead_pacemaker_v" options=$arrDead_pacemaker selected=$arrForm[$dead_pacemaker_v]|default:0}-->
                              </span>
@@ -1458,11 +1606,11 @@
 
                             <span class="attention"><!--{$arrErr[$coffin_wifth_v]}--><!--{$arrErr[$coffin_height_v]}--><!--{$arrErr[$coffin_hei_v]}--></span>
                             <span>縦：
-                                <input type="number" id="hitugi_01" class="w_20" name="<!--{$coffin_wifth_v}-->" value="<!--{$arrForm[$coffin_wifth_v]}-->" style="<!--{$arrErr[$coffin_wifth_v]|getErrorColor}-->;" maxlength="8" size="6" class="box6" />
+                                <input type="number" id="hitugi_01" class="w_20" name="<!--{$coffin_height_v}-->" value="<!--{$arrForm[$coffin_height_v]}-->" style="<!--{$arrErr[$coffin_height_v]|getErrorColor}-->;" maxlength="8" size="6" class="box6" />
                             </span>
 
                             <span>横：
-                                <input type="number" id="hitugi_02" class="w_20" name="<!--{$coffin_height_v}-->" value="<!--{$arrForm[$coffin_height_v]}-->" style="<!--{$arrErr[$coffin_height_v]|getErrorColor}-->;" maxlength="8" size="6" class="box6" />
+                                <input type="number" id="hitugi_02" class="w_20" name="<!--{$coffin_wifth_v}-->" value="<!--{$arrForm[$coffin_wifth_v]}-->" style="<!--{$arrErr[$coffin_wifth_v]|getErrorColor}-->;" maxlength="8" size="6" class="box6" />
                             </span>
 
                             <span>高：
@@ -1470,9 +1618,24 @@
                             </span>
 
                             <!--{assign var=death_weight_tmp_v value="death_weight_tmp"}-->
+
+                            <!--{if $Ren_Weight_F_v == 1}-->
                             <span id="weight_edit">
-                                体重：<br /><!--{html_radios name="$death_weight_tmp_v" options=$arrWeight_dead selected=$arrForm[$death_weight_tmp_v]|default:0}-->
+                                体重<br /><!--{html_radios name="$death_weight_tmp_v" options=$arrWeight_dead selected=$arrForm[$death_weight_tmp_v]|default:1}-->
                             </span>
+
+                            <!--{elseif $Ren_Weight_F_v == 2}-->
+                             <span id="weight_edit">
+                                体重<br /><!--{html_radios name="$death_weight_tmp_v" options=$arrWeight_dead selected=$arrForm[$death_weight_tmp_v]|default:2}-->
+                            </span>
+                            
+                            <!--{else}-->
+                             <span id="weight_edit">
+                                体重<br /><!--{html_radios name="$death_weight_tmp_v" options=$arrWeight_dead selected=$arrForm[$death_weight_tmp_v]|default:0}-->
+                            </span>
+                            
+                            <!--{/if}-->
+
 
                     </td>
                 </tr>
@@ -1676,12 +1839,12 @@
                         </span>
                         <span class="death_time_free">
                              <!--{assign var=time_of_death_free_v value="time_of_death_free"}-->
-                             <input type="text" class="w_80" name="<!--{$time_of_death_free_v}-->" id="time_of_death_free" value="<!--{$arrForm[$time_of_death_free_v]}-->" maxlength="12" size="12" class="box6" />
+                             <input type="text" class="w_80" name="<!--{$time_of_death_free_v}-->" id="time_of_death_free" value="<!--{$arrForm[$time_of_death_free_v]}-->" maxlength="60" size="40" class="box6" />
 
                         </span>
                         </p>
 
-                        <!--{else}-->
+                        <!--{elseif sibou_time_Flg_v == 1}-->
 
                           <!--{assign var=death_time_H value="time_of_death_hour"}-->
                         <!--{assign var=death_time_M value="time_of_death_minutes"}-->
@@ -1723,7 +1886,7 @@
                         </span>
                         <span class="death_time_free">
                              <!--{assign var=time_of_death_free_v value="time_of_death_free"}-->
-                             <input type="text" class="w_80" name="<!--{$time_of_death_free_v}-->" id="time_of_death_free" value="<!--{$arrForm[$time_of_death_free_v]}-->" maxlength="12" size="12" class="box6" />
+                             <input type="text" class="w_80" name="<!--{$time_of_death_free_v}-->" id="time_of_death_free" value="<!--{$arrForm[$time_of_death_free_v]}-->" maxlength="60" size="40" class="box6" />
 
                         </span>
                         </p>
@@ -1819,14 +1982,6 @@
                             人位
                     </td>
                 </tr>
-
-                <!--{assign var=syuukotu_kub_v value="syuukotu_kub"}-->
-                <tr>       
-                    <th class="alignL sp_title_01">収骨</th>    
-                    <td class="alignL">
-                        <!--{html_radios name="$syuukotu_kub_v" options=$arrSyuukotu_KB selected=$arrForm[$syuukotu_kub_v]|default:0}-->
-                    </td>
-                </tr>
                
                 <!--{assign var=nin_weeks_f_v value="nin_weeks_f"}-->
                 <tr>
@@ -1859,11 +2014,11 @@
                     <td class="alignL">
 
                             <span>縦：
-                                <input type="number" id="hitugi_04" class="w_20" name="<!--{$coffin_wifth_v}-->" value="<!--{$arrForm[$coffin_wifth_v]}-->" maxlength="8" size="8" class="box6" />
+                                <input type="number" id="hitugi_04" class="w_20" name="<!--{$coffin_height_v}-->" value="<!--{$arrForm[$coffin_height_v]}-->" maxlength="8" size="8" class="box6" />
                             </span>
 
                             <span>横：
-                                <input type="number" id="hitugi_05" class="w_20" name="<!--{$coffin_height_v}-->" value="<!--{$arrForm[$coffin_height_v]}-->" maxlength="8" size="8" class="box6" />
+                                <input type="number" id="hitugi_05" class="w_20" name="<!--{$coffin_wifth_v}-->" value="<!--{$arrForm[$coffin_wifth_v]}-->" maxlength="8" size="8" class="box6" />
                             </span>
 
                             <span>高：
@@ -2071,7 +2226,7 @@
                         </span>
                         <span class="death_time_free">
                              <!--{assign var=time_of_death_free_v value="time_of_death_free"}-->
-                             <input type="text" class="w_80" name="<!--{$time_of_death_free_v}-->" id="time_of_death_free" value="<!--{$arrForm[$time_of_death_free_v]}-->" maxlength="12" size="12" class="box6" />
+                             <input type="text" class="w_80" name="<!--{$time_of_death_free_v}-->" id="time_of_death_free" value="<!--{$arrForm[$time_of_death_free_v]}-->" maxlength="60" size="40" class="box6" />
 
                         </span>
                         </p>
@@ -2118,7 +2273,7 @@
                         </span>
                         <span class="death_time_free">
                              <!--{assign var=time_of_death_free_v value="time_of_death_free"}-->
-                             <input type="text" class="w_80" name="<!--{$time_of_death_free_v}-->" id="time_of_death_free" value="<!--{$arrForm[$time_of_death_free_v]}-->" maxlength="12" size="12" class="box6" />
+                             <input type="text" class="w_80" name="<!--{$time_of_death_free_v}-->" id="time_of_death_free" value="<!--{$arrForm[$time_of_death_free_v]}-->" maxlength="60" size="40" class="box6" />
 
                         </span>
                         </p>
@@ -2214,14 +2369,6 @@
                             人位
                     </td>
                 </tr>
-
-                <!--{assign var=syuukotu_kub_v value="syuukotu_kub"}-->
-                <tr>       
-                    <th class="alignL sp_title_01">収骨</th>    
-                    <td class="alignL">
-                        <!--{html_radios name="$syuukotu_kub_v" options=$arrSyuukotu_KB selected=$arrForm[$syuukotu_kub_v]|default:0}-->
-                    </td>
-                </tr>
                
                 <!--{assign var=nin_weeks_f_v value="nin_weeks_f"}-->
                 <tr>
@@ -2254,11 +2401,11 @@
                     <td class="alignL">
 
                             <span>縦：
-                                <input type="number" id="hitugi_07" class="w_20" name="<!--{$coffin_wifth_v}-->" value="<!--{$arrForm[$coffin_wifth_v]}-->" maxlength="8" size="8" class="box6" />
+                                <input type="number" id="hitugi_07" class="w_20" name="<!--{$coffin_height_v}-->" value="<!--{$arrForm[$coffin_height_v]}-->" maxlength="8" size="8" class="box6" />
                             </span>
 
                             <span>横：
-                                <input type="number" id="hitugi_08" class="w_20" name="<!--{$coffin_height_v}-->" value="<!--{$arrForm[$coffin_height_v]}-->" maxlength="8" size="8" class="box6" />
+                                <input type="number" id="hitugi_08" class="w_20" name="<!--{$coffin_wifth_v}-->" value="<!--{$arrForm[$coffin_wifth_v]}-->" maxlength="8" size="8" class="box6" />
                             </span>
 
                             <span>高：
@@ -2280,114 +2427,103 @@
                 <col width="25%" />
                 <col width="75%" />
 
+                <!--{assign var=key value="room_type"}-->
                 <tr>
                     <th class="alignL sp_title_01">待合室利用</th>
                     <td class="alignL">
 
                     <p class="form_info_M">※ 利用者をご入力の場合は、「利用する」にチェックを入れてからご入力ください。</p>
-                        <!--{assign var=key value="room_type"}-->
+                      
                         <span class="attention"><!--{$arrErr[$key]}--></span>
                         <span style="<!--{$arrErr[$key]|getErrorColor}-->">
                             <!--{html_radios name="$key" class="$key" options=$arrRoomType selected=$arrForm[$key]|default:0}-->
                         </span>
 
                         <!--{assign var=room_type_num_v value="room_type_num"}-->
+                        <!--{if $Ren_Machiai_riyou_F_v == 0}-->
                         <span id="room_type_num_span">
                             （利用者<input type="number" class="w_20" id="room_type_num" name="<!--{$room_type_num_v}-->" value="<!--{$arrForm[$room_type_num_v]}-->" maxlength="10" size="10" class="box6" />人位）
                         </span>
+                        <!--{else}-->
+                          <span id="room_type_num_span">
+                            （利用者<input type="number" class="w_20" id="room_type_num" name="<!--{$room_type_num_v}-->" value="<!--{$Ren_Machiai_riyou_val}-->" maxlength="10" size="10" class="box6" />人位）
+                        </span>
+                        <!--{/if}-->
+
+
 
                         <!--{assign var=roby_type_num_v value="roby_type_num"}-->
+                        <!--{if $Ren_Machiai_roby_F_v == 0}-->
                         <span id="roby_type_num_span">
                             （ロビー待ち<input type="number" class="w_20" id="roby_type_num" name="<!--{$roby_type_num_v}-->" value="<!--{$arrForm[$roby_type_num_v]}-->" maxlength="10" size="10" class="box6" />人位）
                         </span>
+                        <!--{else}-->
+                         <span id="roby_type_num_span">
+                            （ロビー待ち<input type="number" class="w_20" id="roby_type_num" name="<!--{$roby_type_num_v}-->" value="<!--{$matche_roby_num_val}-->" maxlength="10" size="10" class="box6" />人位）
+                        </span>
+                        <!--{/if}-->
 
+                        <!--{assign var=Machi_show_v value="Machi_show"}-->
                         <p style="margin: 15px 0 5px 0;">
                         <span id="room_big_size">
                         部屋の大きさ：
                         </span>
-                        <span style="display:inline-block;">
-                        <!--{assign var=Machi_show_v value="Machi_show"}-->
-                        <!--{html_radios name="$Machi_show_v" class="$Machi_show_v" options=$arrMatchi_room_s selected=$arrForm[$Machi_show_v]|default:0}-->
-                        </span>
+
+                        <!--{if $Ren_room_F_v == 1}-->
+                            <span style="display:inline-block;">
+                            <!--{html_radios name="$Machi_show_v" class="$Machi_show_v" options=$arrMatchi_room_s selected=$arrForm[$Machi_show_v]|default:1}-->
+                            </span>
+                        <!--{elseif $Ren_room_F_v == 2}-->
+                            <span style="display:inline-block;">
+                             <!--{html_radios name="$Machi_show_v" class="$Machi_show_v" options=$arrMatchi_room_s selected=$arrForm[$Machi_show_v]|default:2}-->
+                            </span>
+                        <!--{elseif $Ren_room_F_v == 3}-->
+                             <span style="display:inline-block;">
+                            <!--{html_radios name="$Machi_show_v" class="$Machi_show_v" options=$arrMatchi_room_s selected=$arrForm[$Machi_show_v]|default:3}-->
+                            </span>
+                        <!--{else}-->
+                             <span style="display:inline-block;">
+                            <!--{html_radios name="$Machi_show_v" class="$Machi_show_v" options=$arrMatchi_room_s selected=$arrForm[$Machi_show_v]|default:0}-->
+                            </span>
+                        <!--{/if}-->
                         </p>
                     </td>
                 </tr>
 
-                 <tr>
-                    <th class="alignL sp_title_01">霊安室利用</th>
-                    <td class="alignL sp_content_01">
-                        <!--{assign var=key value="reian_kubun_f"}-->
-                        <span class="attention"><!--{$arrErr[$key]}--></span>
-                        <span style="<!--{$arrErr[$key]|getErrorColor}-->">
-                            <!--{html_radios name="$key" options=$arrReian_Mae selected=$arrForm[$key]|default:0}-->
-                        </span>
-
-                        <!--{assign var=reian_day_01_v value="reian_day_01"}-->         
-                        <p id="reian_text" style="display: block;margin: 10px 0 10px 0;">
-                        
-                        <span class="reian_s_title">
-                            開始日時：
-                        </span>
-
-                        <span id="rei_01">
-                            <label class="rei_rabel">
-                            <input type="text" style="width:22%;letter-spacing: 0.1em;" class="w_20" id="reian_day_01" name="<!--{$reian_day_01_v}-->" value="<!--{$arrForm[$reian_day_01_v]}-->" maxlength="10" size="12" class="box60" />
-                            </label>
-                        </span>
-
-                        <!--{assign var=reian_time_01_v value="reian_time_01"}-->
-                        <span id="rei_02" style="margin: 0 0 0 15px;">
-                            <select id="reian_time_01" name="<!--{$reian_time_01_v}-->" style="<!--{$arrErr[$reian_time_01_v]|getErrorColor}-->">
-                                <option value="" selected="">未選択</option>
-                            <!--{html_options options=$arr_Reian_Day value=$arr_Reian_Day }-->
-                            </select> 
-                            時 から
-                        </span>
-                        
-                        </p>
-
-                        <p id="reian_text_02" style="display: block;margin: 10px 0 10px 0;">
-
-                        <span class="reian_s_title">
-                            終了日時：
-                        </span>
-
-                        <!--{assign var=reian_day_02_v value="reian_day_02"}-->
-                        <span id="rei_03">
-                             <input type="text" style="width:22%;letter-spacing: 0.1em;" class="w_20" id="reian_day_02" name="<!--{$reian_day_02_v}-->" value="<!--{$arrForm[$reian_day_02_v]}-->" maxlength="10" size="12" class="box60" />
-                        </span>
-
-                            
-                        <!--{assign var=reian_time_02_v value="reian_time_02"}-->
-                        <span id="rei_04" style="margin: 0 0 0 15px;">
-                            <select id="reian_time_02" name="<!--{$reian_time_02_v}-->" style="<!--{$arrErr[$reian_time_02_v]|getErrorColor}-->">
-                                <option value="" selected="">未選択</option>
-                            <!--{html_options options=$arr_Reian_Day value=$arr_Reian_Day }-->
-                            </select> 
-                            時まで
-                        </span>
-
-                        </p>
-
-                    </td>
-                </tr>
 
                 <!--{assign var=funeral_style_n value="funeral_style"}-->
+                <!--{assign var=GET_yousiki_val value=$GET_yousiki_v}-->
+               
                 <tr>
                     <th class="alignL sp_title_01">様式</th>
                     <td class="alignL">
 
                         <p class="form_info_M">※ 選択項目に「様式」がない場合は「その他」をご選択して、右側のボックスへご入力ください。</p>
-
+                      
+                        <!--{if $Yousiki_Flg_v == ""}-->
                         <select id="funeral_style" name="<!--{$funeral_style_n}-->" style="<!--{$err|getErrorColor}-->">
                             <option value="" selected="">未選択</option>
                          <!--{html_options options=$arrSyuu_k_Val_v value=$arrSyuu_k_Val_v}-->
                          </select>
 
-                         <!--{assign var=funeral_style_others_v value="funeral_style_others"}-->
+                        <!--{assign var=funeral_style_others_v value="funeral_style_others"}-->
                          <span style="margin-left:20px;">
                               <input type="text" class="w_60" id="funeral_style_others" name="<!--{$funeral_style_others_v}-->" value="<!--{$arrForm[$funeral_style_others_v]}-->" maxlength="50" size="20" class="box6" />
                          </span>
+
+                         <!--{else}-->
+
+                          <select id="funeral_style" name="<!--{$funeral_style_n}-->" style="<!--{$err|getErrorColor}-->">
+                            <option value="">未選択</option>
+                         <!--{html_options options=$arrSyuu_k_Val_v value=$arrSyuu_k_Val_v selected=$GET_yousiki_v}-->
+                         </select>
+
+                        <!--{assign var=funeral_style_others_v value="funeral_style_others"}-->
+                         <span style="margin-left:20px;">
+                              <input type="text" class="w_60" id="funeral_style_others" name="<!--{$funeral_style_others_v}-->" value="<!--{$Ren_Youshiki_val}-->" maxlength="50" size="20" class="box6" />
+                         </span>
+
+                         <!--{/if}-->
 
                     </td>
                 </tr>
@@ -2400,34 +2536,61 @@
                     <td class="alignL">
 
                          <p class="form_info_M">※ 選択項目に「寺院名」がない場合は「その他」をご選択して、右側のボックスへご入力ください。</p>
+                    
 
+                        <!--{if $Ziin_Flg_v == ""}-->
                         <select id="temple_name" name="<!--{$temple_name_v}-->" style="<!--{$err|getErrorColor}-->">
                             <option value="" selected="">未選択</option>
                          <!--{html_options options=$arrZiin_val_v value=$arrZiin_val_v}-->
                          </select>
+
+                         <!--{else}-->
+                        <select id="temple_name" name="<!--{$temple_name_v}-->" style="<!--{$err|getErrorColor}-->">
+                            <option value="">未選択</option>
+                         <!--{html_options options=$arrZiin_val_v value=$arrZiin_val_v selected=$GET_ziin_v}-->
+                         </select>
+
+                         <!--{/if}-->
                          
+                        <!--{if $Ziin_Flg_Text_v == ""}-->
                         <!--{assign var=temple_name_others_v value="temple_name_others"}-->
                          <span id="zinn_name_edit">
                               <input type="text" class="w_60" id="temple_name_others" name="<!--{$temple_name_others_v}-->" value="<!--{$arrForm[$temple_name_others_v]}-->" maxlength="50" size="20" class="box6" />
                          </span>
                         
+                        <!--{else}-->
+                          <span id="zinn_name_edit">
+                              <input type="text" class="w_60" id="temple_name_others" name="<!--{$temple_name_others_v}-->" value="<!--{$GET_yousiki_v}-->" maxlength="50" size="20" class="box6" />
+                         </span>
+
+                        <!--{/if}-->
+                        
+                        <!--{assign var=kouro_kubun_v value="kouro_kubun"}-->
                          <span id="kouro_edit">
                          香炉：
                          </span>
-                         <!--{assign var=kouro_kubun_v value="kouro_kubun"}-->
+                       
+                         <!--{if $Ren_Kouro_F_v == 1}-->
                         <span style="display:inline-block;">
-                         <!--{html_radios name="$kouro_kubun_v" options=$arrKouro selected=$arrForm[$kouro_kubun_v]|default:0}-->
+                         <!--{html_radios name="$kouro_kubun_v" options=$arrKouro selected=$arrForm[$Ren_Kouro_val]|default:1}-->
                          </span>
+
+                         <!--{else}-->
+                         <span style="display:inline-block;">
+                         <!--{html_radios name="$kouro_kubun_v" options=$arrKouro selected=$arrForm[$Ren_Kouro_val]|default:0}-->
+                         </span>
+                         <!--{/if}-->
 
                     </td>
                 </tr>
 
+                <!--{assign var=key1 value="car_type"}-->
+                <!--{assign var=key2 value="car_dtkb"}-->
+                <!--{assign var=key3 value="car_time"}-->
                 <tr>
                     <th class="alignL sp_title_01">霊柩車利用</th>
                     <td class="alignL">
-                        <!--{assign var=key1 value="car_type"}-->
-                        <!--{assign var=key2 value="car_dtkb"}-->
-                        <!--{assign var=key3 value="car_time"}-->
+                    
                        
                         <span class="attention"><!--{$arrErr[$key1]}--><!--{$arrErr[$key2]}--><!--{$arrErr[$key3]}--></span>
                         <span style="<!--{$arrErr[$key1]|getErrorColor}-->">
@@ -2439,16 +2602,33 @@
                          <p class="form_info_M">※ 選択項目に「出棺場所」がない場合は「その他」をご選択して、右側のボックスへご入力ください。</p>
 
                        <!--{assign var=syukkan_place_v value="syukkan_place"}-->
+                       <!--{assign var=syukkan_place_others_v value="syukkan_place_others"}-->
+
+                       <!--{if $Syukann_Flg_v == ""}-->
                       <p>出棺場所：
                         <select id="syukkan_place" name="<!--{$syukkan_place_v}-->" style="<!--{$arrErr[$syukkan_place_v]|getErrorColor}-->">
                             <option value="" selected="">未選択</option>
                          <!--{html_options options=$arrSyukan_Place_v value=$arrSyukan_Place_v }-->
                          </select> 
+                        <!--{else}-->
+                        <p>出棺場所：
+                        <select id="syukkan_place" name="<!--{$syukkan_place_v}-->" style="<!--{$arrErr[$syukkan_place_v]|getErrorColor}-->">
+                            <option value="">未選択</option>
+                         <!--{html_options options=$arrSyukan_Place_v value=$arrSyukan_Place_v selected=$GET_syukann_v}-->
+                         </select> 
+                        <!--{/if}-->
 
-                        <!--{assign var=syukkan_place_others_v value="syukkan_place_others"}-->
+                      
+                        <!--{if $Syukann_Flg_Text_v == ""}-->
                          <span style="margin-left:20px;">
                               <input type="text" class="w_60" id="syukkan_place_others" name="<!--{$syukkan_place_others_v}-->" value="<!--{$arrForm[$syukkan_place_others_v]}-->" maxlength="50" size="20" class="box6" />
                          </span>
+                        <!--{else}-->
+                        <span style="margin-left:20px;">
+                              <input type="text" class="w_60" id="syukkan_place_others" name="<!--{$syukkan_place_others_v}-->" value="<!--{$GET_syukann_v}-->" maxlength="50" size="20" class="box6" />
+                         </span>
+                        <!--{/if}-->
+
                      </p>
 
                     </td>
@@ -2510,6 +2690,70 @@
     <!--{* ▲FOOTER *}-->
 
 
+ <script>
+
+(function($){
+    $(document).ready(function(){
+
+    var edit_ranraku = $('#edit_ranraku').val();
+
+    if(edit_ranraku.indexOf('様式:') !== -1) {
+        console.log('含まれている');
+    } else {
+        console.log('含まれていない');
+    }
+
+});
+
+})(jQuery);
+
+</script>
+
+ <script>
+
+(function($){
+    $(document).ready(function(){
+    
+    var stuff_infoValue = $('textarea[name="stuff_info"]');
+
+    function removeStringFromStuffInfo(targetString) {
+            var currentValue = stuff_infoValue.val();
+            var newValue = currentValue.replace(targetString, '');
+            stuff_infoValue.val(newValue);
+        }
+
+    function addStringToStuffInfo(newString) {
+
+            var currentValue = stuff_infoValue.val();
+            var newValue = currentValue + newString;
+            stuff_infoValue.val(newValue);
+        }
+
+    $("#funeral_style").change(function(){
+        var value = $("#funeral_style_others").val(); 
+        if (value !== 10) {
+            removeStringFromStuffInfo("様式：" + value + "\n");
+             $("#funeral_style_others").val(""); 
+        }
+    });
+
+    $("#funeral_style_others").blur(function(){
+        var value = $(this).val(); 
+        if (value !== "") {
+           
+           addStringToStuffInfo("様式：" + value + "\n");
+        } else {
+            
+           removeStringFromStuffInfo("様式：" + value + "\n");
+        }
+    });
+});
+
+})(jQuery);
+
+</script>
+
+
 <!-- ============  追加　夏目（前橋） 喪主  =============== -->
 <script>
 
@@ -2532,6 +2776,8 @@
             var newValue = currentValue + newString;
             stuff_infoValue.val(newValue);
         }
+
+      
 
          $('input[name="mosyu_select"]').change(function(){
 
@@ -2575,6 +2821,13 @@
         $('#time_of_death_hour').prop('disabled', false);
         $('#time_of_death_minutes').prop('disabled', false);
 
+        if ($('#time_of_death_time').val() === "") {
+            var hour_r = $('#time_of_death_hour').val();
+            var minute_r = $('#time_of_death_minutes').val();
+            var time_of_death_r = hour_r + minute_r;
+            $('#time_of_death_time').val(time_of_death_r);
+        }
+      
 
         $('#time_of_death_hour, #time_of_death_minutes').blur(function() {
        
@@ -2609,7 +2862,8 @@
 
                 time_of_death = hour + minute;
                 $('#time_of_death_time').val(time_of_death);
-                console.log("死亡時刻:::" + time_of_death);
+               
+
             }
 
             time_of_death = hour + minute;
@@ -3253,8 +3507,24 @@ document.getElementById("yubin_number_18").addEventListener("input", function() 
 
         var Fnc_idx = 0;
 
-        $('#room_type_num_span').hide();
-        $('#roby_type_num_span').show();
+        var romm_type_val = $('input[name="room_type"]:checked').val();
+        if(romm_type_val == 0) {
+            $('#roby_type_num_span').show();
+            $('#room_type_num_span').hide();
+        } else {
+            $('#roby_type_num_span').hide();
+            $('#room_type_num_span').show();
+        }
+
+        var Machi_show_val = $('input[name="Machi_show"]:checked').val();
+        console.log("部屋:::" + Machi_show_val);
+         $('input[name="Machi_show"]').each(function() {
+            if ($(this).val() === Machi_show_val) {
+                $(this).prop('checked', true);
+            } else {
+                $(this).prop('checked', false);
+            }
+        });
 
         var room_type_num = $('#room_type_num');
         var roby_type_num = $('#roby_type_num');
@@ -3277,21 +3547,18 @@ document.getElementById("yubin_number_18").addEventListener("input", function() 
             var currentValue = stuff_infoValue.val();
 
             if ($('#room_type_num_span').is(':visible')) {
-                removeStringFromStuffInfo("ロビー待合せ（" + roby_type_num.val() + "）人位" + "\n");
-                removeStringFromStuffInfo("利用者（" + room_type_num.val() + "）人位" + "\n");
+                removeStringFromStuffInfo("ロビー待合せ：（" + roby_type_num.val() + "）人位" + "\n");
+                removeStringFromStuffInfo("利用者：（" + room_type_num.val() + "）人位" + "\n");
 
-                addStringToStuffInfo("利用者（" + room_type_num.val() + "）人位" + "\n");
+                addStringToStuffInfo("利用者：（" + room_type_num.val() + "）人位" + "\n");
             } else {
-                removeStringFromStuffInfo("利用者（" + room_type_num.val() + "）人位" + "\n");
-                removeStringFromStuffInfo("ロビー待合せ（" + roby_type_num.val() + "）人位" + "\n");
+                removeStringFromStuffInfo("利用者：（" + room_type_num.val() + "）人位" + "\n");
+                removeStringFromStuffInfo("ロビー待合せ：（" + roby_type_num.val() + "）人位" + "\n");
 
-                addStringToStuffInfo("ロビー待合せ（" + roby_type_num.val() + "）人位" + "\n");
+                addStringToStuffInfo("ロビー待合せ：（" + roby_type_num.val() + "）人位" + "\n");
             }
         }
-       
-        $('input[name="Machi_show"]').prop('disabled', false);
-        $('input[name="Machi_show"][value="0"]').prop('checked', true);
-        $('input[name="Machi_show"]').not('[value="0"]').prop('disabled', true);
+    
 
         if(Fnc_idx === 0) {
                 roby_type_num.on('change', function(){
@@ -3315,7 +3582,7 @@ document.getElementById("yubin_number_18").addEventListener("input", function() 
                 $('input[name="Machi_show"][value="0"]').prop('checked', true);
                 $('input[name="Machi_show"]').not('[value="0"]').prop('disabled', true);
 
-                removeStringFromStuffInfo("利用者（" + room_type_num.val() + "）人位" + "\n");
+                removeStringFromStuffInfo("利用者：（" + room_type_num.val() + "）人位" + "\n");
 
                 removeStringFromStuffInfo("部屋の大きさ：" + "小部屋（48人）" + "\n");
                 removeStringFromStuffInfo("部屋の大きさ：" + "大部屋（64人）" + "\n");
@@ -3338,7 +3605,7 @@ document.getElementById("yubin_number_18").addEventListener("input", function() 
                 $('input[name="Machi_show"][value="0"]').prop('disabled', false);
                 $('input[name="Machi_show"][value="0"]').prop('checked', true);
 
-                removeStringFromStuffInfo("ロビー待合せ（" + roby_type_num.val() + "）人位" + "\n");
+                removeStringFromStuffInfo("ロビー待合せ：（" + roby_type_num.val() + "）人位" + "\n");
 
                 room_type_num.on('change', function(){
                     updateStuffInfo();
@@ -3648,6 +3915,16 @@ document.addEventListener("DOMContentLoaded", function() {
     var selectBox_02 = document.getElementById("temple_name");
     var temple_name_others = document.getElementById("temple_name_others");
 
+    if (temple_name_others.value.trim() !== "") {
+        var options = selectBox_02.options;
+        for (var i = 0; i < options.length; i++) {
+            if (options[i].value === "その他") {
+                selectBox_02.selectedIndex = i;
+                break;
+            }
+        }
+    }
+
     toggleTextBox_SelectBox_temple(selectBox_02, temple_name_others);
 
     selectBox_02.addEventListener("change", function() {
@@ -3666,6 +3943,16 @@ document.addEventListener("DOMContentLoaded", function() {
     var selectBox_03 = document.getElementById("syukkan_place");
     var syukkan_place_others = document.getElementById("syukkan_place_others");
 
+     if (syukkan_place_others.value.trim() !== "") {
+        var options = selectBox_03.options;
+        for (var i = 0; i < options.length; i++) {
+            if (options[i].value === "その他") {
+                selectBox_03.selectedIndex = i;
+                break;
+            }
+        }
+    }
+
     toggleTextBox_SelectBox_syukkan(selectBox_03, syukkan_place_others);
 
     selectBox_03.addEventListener("change", function() {
@@ -3682,14 +3969,31 @@ function toggleTextBox_SelectBox_syukkan(selectBox, textBoxElement) {
 
 
 document.addEventListener("DOMContentLoaded", function() {
-    var roomTypeRadios = document.getElementsByName("applicant_rel");
-    var roomTypeNumTextbox = document.getElementById("applicant_rel_text_v");
+   var roomTypeRadios = document.getElementsByName("applicant_rel");
+   var roomTypeNumTextbox = document.getElementById("applicant_rel_text_v");
 
-    toggleTextBox_Applicant_rel(roomTypeRadios, roomTypeNumTextbox, "1");
+    if (roomTypeNumTextbox.value.trim() !== "") {
+        for (var i = 0; i < roomTypeRadios.length; i++) {
+            if (roomTypeRadios[i].value === "その他") {
+                roomTypeRadios[i].checked = true;
+                break;
+            } 
+        }
+    }
+
+     for (var i = 0; i < roomTypeRadios.length; i++) {
+        roomTypeRadios[i].addEventListener("change", function() {
+            if (this.value === "親族") {
+                roomTypeNumTextbox.value = ""; 
+            }
+        });
+    }
+
+    toggleTextBox_Applicant_rel(roomTypeRadios, roomTypeNumTextbox, "その他");
   
     for (var i = 0; i < roomTypeRadios.length; i++) {
         roomTypeRadios[i].addEventListener("change", function() {
-            toggleTextBox_Applicant_rel(roomTypeRadios, roomTypeNumTextbox, "1");
+            toggleTextBox_Applicant_rel(roomTypeRadios, roomTypeNumTextbox, "その他");
         });
     }
 
@@ -3755,6 +4059,9 @@ document.getElementById('dead_day').addEventListener('change', Dead_time_Validat
 
 
 </script>
+
+
+
 
 
 </body>
